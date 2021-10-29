@@ -9,11 +9,11 @@ public class Account
 	
 	Account(String custName, int PIN, double balance)
 	{
-		this.setAccountID();
 		this.setCustName(custName);
 		this.setPIN(PIN);
 		this.setBalance(balance);
 		numAccounts++;
+		this.setAccountID();
 	}
 	
 	public void setAccountID()
