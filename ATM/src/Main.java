@@ -38,8 +38,7 @@ public class Main
 			switch(response)
 			{
 			case 1:
-				cls();
-				displayLogIn();
+				logIn(accounts);
 				break;
 				
 			case 2:
@@ -54,7 +53,7 @@ public class Main
 			
 			case 4:
 				cls();
-				System.exit(0);
+				exit();
 			
 			default:
 				cls();
@@ -66,32 +65,97 @@ public class Main
 			cls();
 			displayOpeningScreen(accounts);
 		}
-		
-		scanner.close();
+		finally
+		{
+			scanner.close();
+		}
+
 	}
 	
-	public static void displayLogIn()
+	public static void logIn(ArrayList<Account> accounts)
 	{
+		cls();
+		int response;
 		Scanner scanner = new Scanner(System.in);
 		
 		System.out.print("*******************\n");
 		System.out.print("Bank Of Ireland\n");
 		System.out.print("*******************\n\n");
-		System.out.println("Log In");
+		System.out.println("Log In (Enter 0 to exit)\n");
+		System.out.print("Enter Account Number: ");
+		
+		try
+		{
+			response = scanner.nextInt();
+			
+			if(response == 0)
+			{
+				cls();
+				exit();
+			}
+			
+			//Check if accountID exists
+			for(int i = 0; i < accounts.size(); i++)
+			{
+				if(accounts.get(i).getAccountID() == response)
+				{
+					int PIN = accounts.get(i).getPIN();
+					
+					System.out.println("Enter PIN: ");
+					
+					int PINresponse = scanner.nextInt();
+					
+					if(PINresponse == PIN)
+					{
+						cls();
+						System.out.println("Login Successful");
+					}
+					else
+					{
+						cls();
+						System.out.println("PIN Incorrect");
+					}
+					
+					loading();
+					mainOptions();
+				}
+			}
+		}
+		catch(InputMismatchException e)
+		{
+			cls();
+			logIn(accounts);
+		}
+		finally
+		{
+			scanner.close();
+		}
 	}
 	
 	public static void displayCreateAccount()
 	{
+		cls();
+		
 		Scanner scanner = new Scanner(System.in);
 		
 		System.out.print("*******************\n");
 		System.out.print("Bank Of Ireland\n");
 		System.out.print("*******************\n\n");
 		System.out.println("Create Account");
+		
+		scanner.close();
+	}
+	
+	public static void mainOptions()
+	{
+		cls();
+		System.out.println("Hi");
 	}
 	
 	public static void displayAccounts(ArrayList<Account> accounts)
 	{
+		cls();
+		
 		for(int i = 0; i < accounts.size(); i++)
 		{
 			if(accounts.get(i) == null)
@@ -115,5 +179,24 @@ public class Main
 		{
 			System.out.println(e);
 		}
+	}
+	
+	public static void loading()
+	{
+		System.out.println("Loading...");
+		try 
+		{
+			Thread.sleep(5000);
+		} 
+		catch (InterruptedException e) 
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static void exit()
+	{
+		System.exit(0);
 	}
 }

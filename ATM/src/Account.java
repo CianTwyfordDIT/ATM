@@ -1,7 +1,7 @@
 
 public class Account 
 {
-	static int numAccounts;
+	protected static int numAccounts;
 	private int accountID;
 	private String custName;
 	private int PIN;
@@ -44,6 +44,11 @@ public class Account
 	public String getCustName()
 	{
 		return this.custName;
+	}
+	
+	public int getPIN()
+	{
+		return this.PIN;
 	}
 	
 	public String toString()
