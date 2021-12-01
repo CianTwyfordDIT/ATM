@@ -19,11 +19,15 @@ public class Main
 	
 	public static void displayOpeningScreen(ArrayList<Account> accounts)
 	{
+		cls();
+		
 		int response;
 		Scanner scanner = new Scanner(System.in);
 		
 		System.out.print("*******************\n");
+		System.out.print("\033[34m");
 		System.out.print("Bank Of Ireland\n");
+		System.out.print("\033[37m");
 		System.out.print("*******************\n\n");
 		System.out.println("1) Log In");
 		System.out.println("2) Create Account");
@@ -56,6 +60,17 @@ public class Main
 				exit();
 			
 			default:
+				System.out.print("\033[31mInvalid Selection");
+				System.out.println("\033[37m");
+				try 
+				{
+					Thread.sleep(3000);
+				} 
+				catch (InterruptedException e) 
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				cls();
 				displayOpeningScreen(accounts);
 			}
@@ -72,6 +87,7 @@ public class Main
 
 	}
 	
+	//Screen to log in 
 	public static void logIn(ArrayList<Account> accounts)
 	{
 		cls();
@@ -79,7 +95,9 @@ public class Main
 		Scanner scanner = new Scanner(System.in);
 		
 		System.out.print("*******************\n");
+		System.out.print("\033[34m");
 		System.out.print("Bank Of Ireland\n");
+		System.out.print("\033[37m");
 		System.out.print("*******************\n\n");
 		System.out.println("Log In (Enter 0 to exit)\n");
 		System.out.print("Enter Account Number: ");
@@ -94,36 +112,58 @@ public class Main
 				exit();
 			}
 			
-			//Check if accountID exists
+			//Iterate over arraylist
 			for(int i = 0; i < accounts.size(); i++)
 			{
+				//Check if accountID exists in arraylist
 				if(accounts.get(i).getAccountID() == response)
 				{
+					//Get PIN for account
 					int PIN = accounts.get(i).getPIN();
 					
 					System.out.println("Enter PIN: ");
-					
-					int PINresponse = scanner.nextInt();
-					
-					if(PINresponse == PIN)
+					try
 					{
-						cls();
-						System.out.println("Login Successful");
+						
+						int PINresponse = scanner.nextInt();
+						
+						//Check if PIN matches user input
+						if(PINresponse == PIN)
+						{
+							cls();
+							System.out.print("\033[32m");
+							System.out.println("Login Successful");
+							System.out.print("\033[37m");
+							loading();
+							mainOptions();
+						}
+						else
+						{
+							cls();
+							System.out.print("\033[31m");
+							System.out.println("PIN Incorrect");
+							System.out.print("\033[37m");
+							loading();
+							displayOpeningScreen(accounts);
+						}
 					}
-					else
+					catch(InputMismatchException e)
 					{
-						cls();
-						System.out.println("PIN Incorrect");
+						logIn(accounts);
 					}
-					
+					break;
+				}
+				else
+				{
+					cls();
+					System.out.println("Account " + response + " Doesn't Exist");
 					loading();
-					mainOptions();
+					logIn(accounts);
 				}
 			}
 		}
 		catch(InputMismatchException e)
 		{
-			cls();
 			logIn(accounts);
 		}
 		finally
@@ -139,7 +179,9 @@ public class Main
 		Scanner scanner = new Scanner(System.in);
 		
 		System.out.print("*******************\n");
+		System.out.print("\033[34m");
 		System.out.print("Bank Of Ireland\n");
+		System.out.print("\033[37m");
 		System.out.print("*******************\n\n");
 		System.out.println("Create Account");
 		
