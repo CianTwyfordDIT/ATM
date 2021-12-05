@@ -87,7 +87,7 @@ public class Main
 			catch (InterruptedException ee) 
 			{
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				ee.printStackTrace();
 			}
 			cls();
 			displayOpeningScreen(accounts);
@@ -215,18 +215,82 @@ public class Main
 	
 	public static void displayCreateAccount()
 	{
-		cls();
-		
-		Scanner scanner = new Scanner(System.in);
-		
-		System.out.print("*******************\n");
-		System.out.print("\033[34m");
-		System.out.print("Bank Of Ireland\n");
-		System.out.print("\033[37m");
-		System.out.print("*******************\n\n");
-		System.out.println("Create Account");
-		
-		scanner.close();
+		boolean confirmation = false;
+		String custName;
+		int PIN;
+		double balance;
+			
+		do
+		{	
+			cls();
+			Scanner scanner = new Scanner(System.in);
+			
+			System.out.print("*******************\n");
+			System.out.print("\033[34m");
+			System.out.print("Bank Of Ireland\n");
+			System.out.print("\033[37m");
+			System.out.print("*******************\n\n");
+			System.out.println("Create Account");
+			
+			try
+			{	
+				System.out.print("\nEnter Customer Name: ");
+				custName = scanner.nextLine();
+				
+				System.out.print("Create PIN: ");	
+				PIN = scanner.nextInt();
+				
+				System.out.print("Enter $ Balance: ");	
+				balance = scanner.nextDouble();
+				scanner.nextLine();
+				
+				cls();
+				loading();
+				cls();
+				System.out.print("\033[33m");
+				System.out.println("Confirm Details");
+				System.out.print("\033[37m");
+				System.out.println("\nCustomer Name: " + custName);
+				System.out.println("PIN: " + PIN);
+				System.out.println("Balance: $" + balance);
+				System.out.print("\033[33m");
+				System.out.print("Yes/No: ");
+				System.out.print("\033[37m");
+				
+				if(scanner.next() == "Yes")
+				{
+					confirmation = true;
+				}
+				else if(scanner.next() == "No")
+				{
+					confirmation = false;
+				}
+				else
+				{
+					confirmation = false;
+					System.out.print("\033[31m");
+					System.out.println("Invalid Input");
+					System.out.print("\033[37m");
+				}
+			}
+			catch(InputMismatchException e)
+			{
+				System.out.print("\033[31m");
+				System.out.println("Invalid Input");
+				System.out.print("\033[37m");
+				try 
+				{
+					Thread.sleep(3000);
+				} 
+				catch (InterruptedException ee) 
+				{
+					// TODO Auto-generated catch block
+					ee.printStackTrace();
+				}
+				displayCreateAccount();
+			}
+		}
+		while(confirmation == false);
 	}
 	
 	public static void mainOptions()
