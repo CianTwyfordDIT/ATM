@@ -77,6 +77,18 @@ public class Main
 		}
 		catch(InputMismatchException e)
 		{
+			System.out.print("\033[31m");
+			System.out.print("Invalid Selection");
+			System.out.println("\033[37m");
+			try 
+			{
+				Thread.sleep(3000);
+			} 
+			catch (InterruptedException ee) 
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			cls();
 			displayOpeningScreen(accounts);
 		}
@@ -91,7 +103,9 @@ public class Main
 	public static void logIn(ArrayList<Account> accounts)
 	{
 		cls();
+		
 		int response;
+		boolean checkResponse = false;
 		Scanner scanner = new Scanner(System.in);
 		
 		System.out.print("*******************\n");
@@ -118,49 +132,76 @@ public class Main
 				//Check if accountID exists in arraylist
 				if(accounts.get(i).getAccountID() == response)
 				{
-					//Get PIN for account
-					int PIN = accounts.get(i).getPIN();
-					
-					System.out.println("Enter PIN: ");
-					try
-					{
-						
-						int PINresponse = scanner.nextInt();
-						
-						//Check if PIN matches user input
-						if(PINresponse == PIN)
-						{
-							cls();
-							System.out.print("\033[32m");
-							System.out.println("Login Successful");
-							System.out.print("\033[37m");
-							loading();
-							mainOptions();
-						}
-						else
-						{
-							cls();
-							System.out.print("\033[31m");
-							System.out.println("PIN Incorrect");
-							System.out.print("\033[37m");
-							loading();
-							displayOpeningScreen(accounts);
-						}
-					}
-					catch(InputMismatchException e)
-					{
-						logIn(accounts);
-					}
+					checkResponse = true;
 					break;
 				}
 				else
 				{
-					cls();
-					System.out.println("Account " + response + " Doesn't Exist");
-					loading();
+					continue;
+				}
+			}
+			
+			//If accountID exists in arraylist
+			if(checkResponse)
+			{
+				//Get PIN for account
+				int PIN = accounts.get(response-1).getPIN();
+				
+				System.out.print("Enter PIN: ");
+				try
+				{
+					
+					int PINresponse = scanner.nextInt();
+					
+					//Check if PIN matches user input
+					if(PINresponse == PIN)
+					{
+						cls();
+						System.out.print("\033[32m");
+						System.out.println("Login Successful");
+						System.out.print("\033[37m");
+						loading();
+						mainOptions();
+					}
+					else
+					{
+						System.out.print("\033[31m");
+						System.out.println("PIN Incorrect");
+						System.out.print("\033[37m");
+						try 
+						{
+							Thread.sleep(3000);
+						} 
+						catch (InterruptedException e) 
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						logIn(accounts);
+					}
+				}
+				catch(InputMismatchException e)
+				{
 					logIn(accounts);
 				}
 			}
+			else
+			{
+				System.out.print("\033[31m");
+				System.out.println("Account " + response + " Doesn't Exist");
+				System.out.print("\033[37m");
+				try 
+				{
+					Thread.sleep(3000);
+				} 
+				catch (InterruptedException e) 
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				logIn(accounts);
+			}
+			
 		}
 		catch(InputMismatchException e)
 		{
@@ -225,10 +266,10 @@ public class Main
 	
 	public static void loading()
 	{
-		System.out.println("Loading...");
+		System.out.print("Loading...");
 		try 
 		{
-			Thread.sleep(5000);
+			Thread.sleep(3000);
 		} 
 		catch (InterruptedException e) 
 		{
