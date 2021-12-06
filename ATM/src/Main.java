@@ -47,7 +47,7 @@ public class Main
 				
 			case 2:
 				cls();
-				displayCreateAccount();
+				displayCreateAccount(accounts);
 				break;
 				
 			case 3:
@@ -113,7 +113,7 @@ public class Main
 		System.out.print("Bank Of Ireland\n");
 		System.out.print("\033[37m");
 		System.out.print("*******************\n\n");
-		System.out.println("Log In (Enter 0 to exit)\n");
+		System.out.println("Log In (Enter 0 to return to main menu)\n");
 		System.out.print("Enter Account Number: ");
 		
 		try
@@ -122,8 +122,7 @@ public class Main
 			
 			if(response == 0)
 			{
-				cls();
-				exit();
+				displayOpeningScreen(accounts);
 			}
 			
 			//Iterate over arraylist
@@ -188,7 +187,7 @@ public class Main
 			else
 			{
 				System.out.print("\033[31m");
-				System.out.println("Account " + response + " Doesn't Exist");
+				System.out.println("Account No. " + response + " Doesn't Exist");
 				System.out.print("\033[37m");
 				try 
 				{
@@ -213,7 +212,7 @@ public class Main
 		}
 	}
 	
-	public static void displayCreateAccount()
+	public static void displayCreateAccount(ArrayList<Account> accounts)
 	{
 		boolean confirmation = false;
 		String custName;
@@ -254,16 +253,38 @@ public class Main
 				System.out.println("PIN: " + PIN);
 				System.out.println("Balance: $" + balance);
 				System.out.print("\033[33m");
-				System.out.print("Yes/No: ");
+				System.out.print("Y/N (Enter 0 to return to main menu): ");
 				System.out.print("\033[37m");
 				
-				if(scanner.next() == "Yes")
+				String response = scanner.nextLine();
+				
+				if(response.equals("Y") || response.equals("y"))
 				{
 					confirmation = true;
+					accounts.add(new Account(custName, PIN, balance));
+					cls();
+					System.out.print("\033[32m");
+					System.out.println("New Account Created");
+					System.out.print("\033[36m");
+					System.out.println("\nUser Login Details:");
+					System.out.println("\033[32mAccount Number: \033[37m" + accounts.get(accounts.size()-1).getAccountID());
+					System.out.println("\033[32mPIN: \033[37m" + accounts.get(accounts.size()-1).getPIN());
+					
+					System.out.println("\nPress Enter to Continue:");
+					scanner.nextLine();
+					
+					displayOpeningScreen(accounts);
+					
 				}
-				else if(scanner.next() == "No")
+				else if(response.equals("N") || response.equals("n"))
 				{
 					confirmation = false;
+					cls();
+					loading();
+				}
+				else if(response.equals("0"))
+				{
+					displayOpeningScreen(accounts);
 				}
 				else
 				{
@@ -271,6 +292,15 @@ public class Main
 					System.out.print("\033[31m");
 					System.out.println("Invalid Input");
 					System.out.print("\033[37m");
+					try 
+					{
+						Thread.sleep(3000);
+					} 
+					catch (InterruptedException ee) 
+					{
+						// TODO Auto-generated catch block
+						ee.printStackTrace();
+					}
 				}
 			}
 			catch(InputMismatchException e)
@@ -287,7 +317,7 @@ public class Main
 					// TODO Auto-generated catch block
 					ee.printStackTrace();
 				}
-				displayCreateAccount();
+				displayCreateAccount(accounts);
 			}
 		}
 		while(confirmation == false);
@@ -303,6 +333,8 @@ public class Main
 	{
 		cls();
 		
+		Scanner scanner = new Scanner(System.in);
+		
 		for(int i = 0; i < accounts.size(); i++)
 		{
 			if(accounts.get(i) == null)
@@ -314,6 +346,10 @@ public class Main
 		}
 		System.out.println("\nNumber of Accounts: " + Account.numAccounts);
 		
+		System.out.println("\nPress Enter to Continue:");
+		scanner.nextLine();
+		
+		displayOpeningScreen(accounts);
 	}
 	
 	public static void cls()

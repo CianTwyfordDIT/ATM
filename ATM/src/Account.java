@@ -53,8 +53,8 @@ public class Account
 	
 	public String toString()
 	{
-		return "Account ID: " + accountID + "\nCustomer Name: "
-				+ custName + "\nBalance: " + balance;
+		return "\033[33mAccount No. " + accountID + "\033[37m\nCustomer Name: "
+				+ custName + "\nPIN: " + PIN + "\nBalance: $" + balance;
 	}
 	
 }
