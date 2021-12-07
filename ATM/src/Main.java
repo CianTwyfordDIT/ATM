@@ -8,12 +8,6 @@ public class Main
 	{	
 		ArrayList<Account> accounts = new ArrayList<Account>();
 		
-		Account account1 = new Account("Cian Twyford", 1234, 2000.0);
-		accounts.add(account1);
-		
-		Account account2 = new Account("Gary Twyford", 4321, 4000.0);
-		accounts.add(account2);
-		
 		displayOpeningScreen(accounts);
 	}
 	
