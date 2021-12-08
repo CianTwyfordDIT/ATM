@@ -5,31 +5,24 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
 public class AccountWriterReader 
-{
-	public static void main(String[] args)
+{	
+	public ArrayList<Account> Read(ArrayList<Account> accounts)
 	{
-		Account account1 = new Account("Cian Twyford", 1234, 2000.0);
-		//accounts.add(account1);
-		
 		try
-		{
-			FileOutputStream f = new FileOutputStream(new File("Accounts.txt"));
-			ObjectOutputStream o = new ObjectOutputStream(f);
-			
-			//Write objects to file
-			o.writeObject(account1);
-			
-			o.close();
-			f.close();
-			
+		{	
 			FileInputStream fi = new FileInputStream(new File("Accounts.txt"));
 			ObjectInputStream oi = new ObjectInputStream(fi);
 			
-			Account acc1 = (Account) oi.readObject();
+			int size = oi.readInt();
 			
-			System.out.println(acc1.toString());
+			for (int i = 0; i < size; i++)
+			{
+				Account a = (Account) oi.readObject();
+				accounts.add(a);
+			}
 			
 			oi.close();
 			fi.close();
@@ -47,5 +40,34 @@ public class AccountWriterReader
 		{
 			e.printStackTrace();
 		}
+		return accounts;
+	}
+	
+	public void Write(ArrayList<Account> accounts)
+	{
+		try
+		{
+			FileOutputStream f = new FileOutputStream(new File("Accounts.txt"));
+			ObjectOutputStream o = new ObjectOutputStream(f);
+			
+			//Write objects to file
+			o.writeInt(accounts.size());
+			
+			for (Account account: accounts)
+			{
+				o.writeObject(account);
+			}
+			
+			o.close();
+			f.close();
+		}
+		catch(FileNotFoundException e)
+		{
+			System.out.println("File Not Found");
+		}
+		catch(IOException e)
+		{
+			System.out.println("Error Initialising Stream");
+		}		
 	}
 }

@@ -4,9 +4,12 @@ import java.util.Scanner;
 
 public class Main 
 {
+	static AccountWriterReader awr = new AccountWriterReader();
+	
 	public static void main(String[] args) 
 	{	
 		ArrayList<Account> accounts = new ArrayList<Account>();
+		accounts = awr.Read(accounts);
 		
 		displayOpeningScreen(accounts);
 	}
@@ -256,6 +259,7 @@ public class Main
 				{
 					confirmation = true;
 					accounts.add(new Account(custName, PIN, balance));
+					awr.Write(accounts);
 					cls();
 					System.out.print("\033[32m");
 					System.out.println("New Account Created");
