@@ -58,15 +58,17 @@ public class Main
 			default:
 				System.out.print("\033[31mInvalid Selection");
 				System.out.println("\033[37m");
+				
 				try 
 				{
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 				} 
 				catch (InterruptedException e) 
 				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
 				cls();
 				displayOpeningScreen(accounts);
 			}
@@ -76,15 +78,17 @@ public class Main
 			System.out.print("\033[31m");
 			System.out.print("Invalid Selection");
 			System.out.println("\033[37m");
+			
 			try 
 			{
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 			} 
 			catch (InterruptedException ee) 
 			{
 				// TODO Auto-generated catch block
 				ee.printStackTrace();
 			}
+			
 			cls();
 			displayOpeningScreen(accounts);
 		}
@@ -154,7 +158,7 @@ public class Main
 					{
 						cls();
 						System.out.print("\033[32m");
-						System.out.println("Login Successful");
+						System.out.println("Login Successful\n");
 						System.out.print("\033[37m");
 						loading();
 						mainOptions(accounts);
@@ -164,15 +168,17 @@ public class Main
 						System.out.print("\033[31m");
 						System.out.println("PIN Incorrect");
 						System.out.print("\033[37m");
+						
 						try 
 						{
-							Thread.sleep(3000);
+							Thread.sleep(2000);
 						} 
 						catch (InterruptedException e) 
 						{
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
+						
 						logIn(accounts);
 					}
 				}
@@ -182,9 +188,15 @@ public class Main
 					System.out.println("Invalid Input");
 					System.out.print("\033[37m");
 
-					System.out.println("\nPress Enter to Continue:");
-					scanner.nextLine();
-					scanner.nextLine();
+					try 
+					{
+						Thread.sleep(2000);
+					} 
+					catch (InterruptedException ee) 
+					{
+						// TODO Auto-generated catch block
+						ee.printStackTrace();
+					}
 					
 					logIn(accounts);
 				}
@@ -194,15 +206,17 @@ public class Main
 				System.out.print("\033[31m");
 				System.out.println("Account No. " + response + " Doesn't Exist");
 				System.out.print("\033[37m");
+				
 				try 
 				{
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 				} 
 				catch (InterruptedException e) 
 				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
 				logIn(accounts);
 			}
 			
@@ -213,9 +227,15 @@ public class Main
 			System.out.println("Invalid Input");
 			System.out.print("\033[37m");
 			
-			System.out.println("\nPress Enter to Continue:");
-			scanner.nextLine();
-			scanner.nextLine();
+			try 
+			{
+				Thread.sleep(2000);
+			} 
+			catch (InterruptedException ee) 
+			{
+				// TODO Auto-generated catch block
+				ee.printStackTrace();
+			}
 
 			logIn(accounts);
 		}
@@ -234,29 +254,50 @@ public class Main
 			
 		do
 		{	
-			cls();
 			@SuppressWarnings("resource")
 			Scanner scanner = new Scanner(System.in);
-			
-			System.out.print("*******************\n");
-			System.out.print("\033[34m");
-			System.out.print("Bank Of Ireland\n");
-			System.out.print("\033[37m");
-			System.out.print("*******************\n\n");
-			System.out.println("Create Account");
-			
 			try
 			{	
-				System.out.print("\nEnter Customer Name: ");
-				custName = scanner.nextLine();
-				
-				System.out.print("Create PIN: ");	
-				PIN = scanner.nextInt();
-				
-				System.out.print("Enter $ Balance: ");	
-				balance = scanner.nextDouble();
-				scanner.nextLine();
-				
+				do
+				{
+					cls();
+					
+					System.out.print("*******************\n");
+					System.out.print("\033[34m");
+					System.out.print("Bank Of Ireland\n");
+					System.out.print("\033[37m");
+					System.out.print("*******************\n\n");
+					System.out.println("Create Account");
+					
+					System.out.print("\nEnter Customer Name: ");
+					custName = scanner.nextLine();
+					
+					System.out.print("Create PIN: ");	
+					PIN = scanner.nextInt();
+	
+					System.out.print("Enter $ Balance: ");	
+					balance = scanner.nextDouble();
+					scanner.nextLine();
+					
+					if((int)(Math.log10(PIN) + 1) != 4)
+					{
+						System.out.print("\033[31m");
+						System.out.println("Invalid PIN - Must be 4 digits");
+						System.out.print("\033[37m");
+	
+						try 
+						{
+							Thread.sleep(3000);
+						} 
+						catch (InterruptedException e) 
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+				while((int)(Math.log10(PIN) + 1) != 4);
+					
 				cls();
 				loading();
 				
@@ -315,8 +356,15 @@ public class Main
 						System.out.println("Invalid Input");
 						System.out.print("\033[37m");
 	
-						System.out.println("\nPress Enter to Continue:");
-						scanner.nextLine();
+						try 
+						{
+							Thread.sleep(2000);
+						} 
+						catch (InterruptedException e) 
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				} while(!response.equals("Y") && !response.equals("y") && !response.equals("N") && !response.equals("n") && !response.equals("0"));
 			}
@@ -326,9 +374,15 @@ public class Main
 				System.out.println("Invalid Input");
 				System.out.print("\033[37m");
 				
-				System.out.println("\nPress Enter to Continue:");
-				scanner.nextLine();
-				scanner.nextLine();
+				try 
+				{
+					Thread.sleep(2000);
+				} 
+				catch (InterruptedException ee) 
+				{
+					// TODO Auto-generated catch block
+					ee.printStackTrace();
+				}
 				
 				displayCreateAccount(accounts);
 			}
@@ -463,7 +517,7 @@ public class Main
 		System.out.print("Loading...");
 		try 
 		{
-			Thread.sleep(3000);
+			Thread.sleep(2000);
 		} 
 		catch (InterruptedException e) 
 		{
