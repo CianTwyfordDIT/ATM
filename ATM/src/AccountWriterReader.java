@@ -9,13 +9,16 @@ import java.util.ArrayList;
 
 public class AccountWriterReader 
 {	
-	public ArrayList<Account> Read(ArrayList<Account> accounts)
+	public ArrayList<Account> Read()
 	{
+		ArrayList<Account> accounts = new ArrayList<Account>();
+		
 		try
 		{	
 			FileInputStream fi = new FileInputStream(new File("Accounts.txt"));
 			ObjectInputStream oi = new ObjectInputStream(fi);
 			
+			//Read accounts from file
 			int size = oi.readInt();
 			
 			for (int i = 0; i < size; i++)
@@ -34,7 +37,7 @@ public class AccountWriterReader
 		}
 		catch(IOException e)
 		{
-			System.out.println("Error Initialising Stream");
+			//System.out.println("Error Initialising Stream");
 		}
 		catch(ClassNotFoundException e)
 		{
@@ -43,14 +46,14 @@ public class AccountWriterReader
 		return accounts;
 	}
 	
-	public void Write(ArrayList<Account> accounts)
+	public ArrayList<Account> Write(ArrayList<Account> accounts)
 	{
 		try
 		{
 			FileOutputStream f = new FileOutputStream(new File("Accounts.txt"));
 			ObjectOutputStream o = new ObjectOutputStream(f);
 			
-			//Write objects to file
+			//Write accounts to file
 			o.writeInt(accounts.size());
 			
 			for (Account account: accounts)
@@ -67,7 +70,8 @@ public class AccountWriterReader
 		}
 		catch(IOException e)
 		{
-			System.out.println("Error Initialising Stream");
-		}		
+			//System.out.println("Error Initialising Stream");
+		}
+		return accounts;
 	}
 }

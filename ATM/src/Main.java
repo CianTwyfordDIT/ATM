@@ -9,7 +9,6 @@ public class Main
 	public static void main(String[] args) 
 	{	
 		ArrayList<Account> accounts = new ArrayList<Account>();
-		accounts = awr.Read(accounts);
 		
 		displayOpeningScreen(accounts);
 	}
@@ -219,6 +218,7 @@ public class Main
 		do
 		{	
 			cls();
+			@SuppressWarnings("resource")
 			Scanner scanner = new Scanner(System.in);
 			
 			System.out.print("*******************\n");
@@ -258,15 +258,16 @@ public class Main
 				if(response.equals("Y") || response.equals("y"))
 				{
 					confirmation = true;
-					accounts.add(new Account(custName, PIN, balance));
-					awr.Write(accounts);
+					int accountID = accounts.size()+1;
+					accounts.add(new Account(custName, PIN, balance, accountID));
+					accounts = awr.Write(accounts);
 					cls();
 					System.out.print("\033[32m");
 					System.out.println("New Account Created");
 					System.out.print("\033[36m");
 					System.out.println("\nUser Login Details:");
-					System.out.println("\033[32mAccount Number: \033[37m" + accounts.get(accounts.size()-1).getAccountID());
-					System.out.println("\033[32mPIN: \033[37m" + accounts.get(accounts.size()-1).getPIN());
+					System.out.println("\033[33mAccount Number: \033[37m" + accounts.get(accounts.size()-1).getAccountID());
+					System.out.println("\033[33mPIN: \033[37m" + accounts.get(accounts.size()-1).getPIN());
 					
 					System.out.println("\nPress Enter to Continue:");
 					scanner.nextLine();
@@ -331,7 +332,9 @@ public class Main
 	{
 		cls();
 		
+		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(System.in);
+		accounts = awr.Read();
 		
 		for(int i = 0; i < accounts.size(); i++)
 		{
@@ -342,7 +345,9 @@ public class Main
 			System.out.println(accounts.get(i));
 			System.out.println();
 		}
-		System.out.println("\nNumber of Accounts: " + Account.numAccounts);
+		
+		
+		System.out.println("\nNumber of Accounts: " + accounts.size());
 		
 		System.out.println("\nPress Enter to Continue:");
 		scanner.nextLine();

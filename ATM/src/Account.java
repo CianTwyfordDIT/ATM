@@ -9,18 +9,17 @@ public class Account implements Serializable
 	private int PIN;
 	private double balance = 0;
 	
-	Account(String custName, int PIN, double balance)
+	Account(String custName, int PIN, double balance, int accountID)
 	{
 		this.setCustName(custName);
 		this.setPIN(PIN);
 		this.setBalance(balance);
-		numAccounts++;
-		this.setAccountID();
+		this.setAccountID(accountID);
 	}
 	
-	public void setAccountID()
+	public void setAccountID(int accountID)
 	{
-		this.accountID = numAccounts;
+		this.accountID = accountID;;
 	}
 	
 	public void setCustName(String custName)
