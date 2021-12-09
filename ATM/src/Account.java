@@ -52,6 +52,11 @@ public class Account implements Serializable
 		return this.PIN;
 	}
 	
+	public double getBalance()
+	{
+		return this.balance;
+	}
+	
 	public String toString()
 	{
 		return "\033[33mAccount No. " + accountID + "\033[37m\nCustomer Name: "

@@ -388,7 +388,7 @@ public class Main
 		} while(confirmation == false);
 	}
 	
-	public static void mainOptions(int accountID)
+	public static void mainOptions(int accountNum)
 	{
 		cls();
 		Scanner scanner = new Scanner(System.in);
@@ -414,6 +414,7 @@ public class Main
 			switch(response)
 			{
 			case 1:
+				showBalance(accountNum);
 				break;
 				
 			case 2:
@@ -446,7 +447,7 @@ public class Main
 					e.printStackTrace();
 				}
 				cls();
-				mainOptions(accountID);
+				mainOptions(accountNum);
 			}
 		}
 		catch(InputMismatchException e)
@@ -464,7 +465,7 @@ public class Main
 				ee.printStackTrace();
 			}
 			cls();
-			mainOptions(accountID);
+			mainOptions(accountNum);
 		}
 		finally
 		{
@@ -499,9 +500,17 @@ public class Main
 		displayOpeningScreen();
 	}
 	
-	public static void showBalance()
+	public static void showBalance(int accountNum)
 	{
+		Scanner scanner = new Scanner(System.in);
 		
+		System.out.println(accounts.get(accountNum-1).getCustName());
+		System.out.println(accounts.get(accountNum-1).getBalance());
+		
+		System.out.println("Press Enter to Continue");
+		scanner.nextLine();
+		
+		mainOptions(accountNum);
 	}
 	
 	public static void cls()
