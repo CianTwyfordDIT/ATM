@@ -5,15 +5,14 @@ import java.util.Scanner;
 public class Main 
 {
 	static AccountWriterReader awr = new AccountWriterReader();
+	private static ArrayList<Account> accounts = new ArrayList<Account>();
 	
 	public static void main(String[] args) 
 	{	
-		ArrayList<Account> accounts = new ArrayList<Account>();
-		
-		displayOpeningScreen(accounts);
+		displayOpeningScreen();
 	}
 	
-	public static void displayOpeningScreen(ArrayList<Account> accounts)
+	public static void displayOpeningScreen()
 	{
 		cls();
 		
@@ -38,17 +37,17 @@ public class Main
 			switch(response)
 			{
 			case 1:
-				logIn(accounts);
+				logIn();
 				break;
 				
 			case 2:
 				cls();
-				displayCreateAccount(accounts);
+				displayCreateAccount();
 				break;
 				
 			case 3:
 				cls();
-				displayAccounts(accounts);
+				displayAccounts();
 				break;
 			
 			case 4:
@@ -70,7 +69,7 @@ public class Main
 				}
 				
 				cls();
-				displayOpeningScreen(accounts);
+				displayOpeningScreen();
 			}
 		}
 		catch(InputMismatchException e)
@@ -90,7 +89,7 @@ public class Main
 			}
 			
 			cls();
-			displayOpeningScreen(accounts);
+			displayOpeningScreen();
 		}
 		finally
 		{
@@ -100,7 +99,7 @@ public class Main
 	}
 	
 	//Screen to log in 
-	public static void logIn(ArrayList<Account> accounts)
+	public static void logIn()
 	{
 		cls();
 		
@@ -123,7 +122,7 @@ public class Main
 			
 			if(response == 0)
 			{
-				displayOpeningScreen(accounts);
+				displayOpeningScreen();
 			}
 			
 			//Iterate over arraylist
@@ -161,7 +160,7 @@ public class Main
 						System.out.println("Login Successful\n");
 						System.out.print("\033[37m");
 						loading();
-						mainOptions(accounts);
+						mainOptions(response);
 					}
 					else
 					{
@@ -179,7 +178,7 @@ public class Main
 							e.printStackTrace();
 						}
 						
-						logIn(accounts);
+						logIn();
 					}
 				}
 				catch(InputMismatchException e)
@@ -198,7 +197,7 @@ public class Main
 						ee.printStackTrace();
 					}
 					
-					logIn(accounts);
+					logIn();
 				}
 			}
 			else
@@ -217,7 +216,7 @@ public class Main
 					e.printStackTrace();
 				}
 				
-				logIn(accounts);
+				logIn();
 			}
 			
 		}
@@ -237,7 +236,7 @@ public class Main
 				ee.printStackTrace();
 			}
 
-			logIn(accounts);
+			logIn();
 		}
 		finally
 		{
@@ -245,7 +244,7 @@ public class Main
 		}
 	}
 	
-	public static void displayCreateAccount(ArrayList<Account> accounts)
+	public static void displayCreateAccount()
 	{
 		boolean confirmation = false;
 		String custName;
@@ -336,7 +335,7 @@ public class Main
 						System.out.println("\nPress Enter to Continue:");
 						scanner.nextLine();
 						
-						displayOpeningScreen(accounts);
+						displayOpeningScreen();
 						
 					}
 					else if(response.equals("N") || response.equals("n"))
@@ -347,7 +346,7 @@ public class Main
 					}
 					else if(response.equals("0"))
 					{
-						displayOpeningScreen(accounts);
+						displayOpeningScreen();
 					}
 					else
 					{
@@ -384,12 +383,12 @@ public class Main
 					ee.printStackTrace();
 				}
 				
-				displayCreateAccount(accounts);
+				displayCreateAccount();
 			}
 		} while(confirmation == false);
 	}
 	
-	public static void mainOptions(ArrayList<Account> accounts)
+	public static void mainOptions(int accountID)
 	{
 		cls();
 		Scanner scanner = new Scanner(System.in);
@@ -432,7 +431,7 @@ public class Main
 			case 6:
 				cls();
 				loading();
-				displayOpeningScreen(accounts);
+				displayOpeningScreen();
 			
 			default:
 				System.out.print("\033[31mInvalid Selection");
@@ -447,7 +446,7 @@ public class Main
 					e.printStackTrace();
 				}
 				cls();
-				mainOptions(accounts);
+				mainOptions(accountID);
 			}
 		}
 		catch(InputMismatchException e)
@@ -465,7 +464,7 @@ public class Main
 				ee.printStackTrace();
 			}
 			cls();
-			mainOptions(accounts);
+			mainOptions(accountID);
 		}
 		finally
 		{
@@ -473,7 +472,7 @@ public class Main
 		}
 	}
 	
-	public static void displayAccounts(ArrayList<Account> accounts)
+	public static void displayAccounts()
 	{
 		cls();
 		
@@ -497,7 +496,12 @@ public class Main
 		System.out.println("\nPress Enter to Continue:");
 		scanner.nextLine();
 		
-		displayOpeningScreen(accounts);
+		displayOpeningScreen();
+	}
+	
+	public static void showBalance()
+	{
+		
 	}
 	
 	public static void cls()
