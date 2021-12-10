@@ -1,7 +1,9 @@
 import java.io.Serializable;
+import java.text.DecimalFormat;
 
 public class Account implements Serializable
 {
+	static DecimalFormat formatter = new DecimalFormat("#,###.00");
 	private static final long serialVersionUID = 1L;
 	protected static int numAccounts;
 	private int accountID;
@@ -60,7 +62,7 @@ public class Account implements Serializable
 	public String toString()
 	{
 		return "\033[33mAccount No. " + accountID + "\033[37m\nCustomer Name: "
-				+ custName + "\nPIN: " + PIN + "\nBalance: $" + balance;
+				+ custName + "\nPIN: " + PIN + "\nBalance: $" + formatter.format(balance);
 	}
 	
 }

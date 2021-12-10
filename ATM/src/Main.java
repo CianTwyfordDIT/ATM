@@ -1,3 +1,4 @@
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -6,6 +7,7 @@ public class Main
 {
 	static AccountWriterReader awr = new AccountWriterReader();
 	private static ArrayList<Account> accounts = new ArrayList<Account>();
+	static DecimalFormat formatter = new DecimalFormat("#,###.00");
 	
 	public static void main(String[] args) 
 	{	
@@ -42,12 +44,10 @@ public class Main
 				break;
 				
 			case 2:
-				cls();
 				createAccount();
 				break;
 				
 			case 3:
-				cls();
 				displayAccounts();
 				break;
 			
@@ -301,7 +301,7 @@ public class Main
 	
 						try 
 						{
-							Thread.sleep(3000);
+							Thread.sleep(2000);
 						} 
 						catch (InterruptedException e) 
 						{
@@ -326,7 +326,7 @@ public class Main
 					System.out.print("\033[37m");
 					System.out.println("\nCustomer Name: " + custName);
 					System.out.println("PIN: " + PIN);
-					System.out.println("Balance: $" + balance);
+					System.out.println("Balance: $" + formatter.format(balance));
 					System.out.print("\033[33m");
 					System.out.print("Y/N (Enter 0 to return to main menu): ");
 					System.out.print("\033[37m");
@@ -337,8 +337,17 @@ public class Main
 					{
 						confirmation = true;
 						
-						//Assign accountID as the next number after last account in arraylist
-						accountID = (accounts.get((accounts.size())-1).getAccountID()+1);
+						//If arraylist is empty, assign first account to 1
+						if(accounts.size() == 0)
+						{
+							accountID = 1;
+						}
+						else
+						{
+							//Assign accountID as the next number after last account in arraylist
+							accountID = (accounts.get((accounts.size())-1).getAccountID()+1);
+						}
+						
 						accounts.add(new Account(custName, PIN, balance, accountID));
 						accounts = awr.Write(accounts);
 						
@@ -422,7 +431,7 @@ public class Main
 		System.out.println("3) Deposit Cash");
 		System.out.println("4) Change PIN");
 		System.out.println("5) Delete Account");
-		System.out.println("6) Exit");
+		System.out.println("6) Exit to Main Menu");
 		System.out.print("\nPlease Select An Option: ");	
 		
 		try
@@ -436,6 +445,7 @@ public class Main
 				break;
 				
 			case 2:
+				withdrawCash(accountNum);
 				break;
 				
 			case 3:
@@ -454,35 +464,36 @@ public class Main
 				openingScreen();
 			
 			default:
-				System.out.print("\033[31mInvalid Selection");
-				System.out.println("\033[37m");
+				System.out.print("\033[31mInvalid Selection\033[37m");
+
 				try 
 				{
-					Thread.sleep(3000);
+					Thread.sleep(2000);
 				} 
 				catch (InterruptedException e) 
 				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
 				cls();
 				mainOptions(accountNum);
 			}
 		}
 		catch(InputMismatchException e)
 		{
-			System.out.print("\033[31m");
-			System.out.print("Invalid Selection");
-			System.out.println("\033[37m");
+			System.out.print("\033[31mInvalid Selection\033[37m");
+			
 			try 
 			{
-				Thread.sleep(3000);
+				Thread.sleep(2000);
 			} 
 			catch (InterruptedException ee) 
 			{
 				// TODO Auto-generated catch block
 				ee.printStackTrace();
 			}
+			
 			cls();
 			mainOptions(accountNum);
 		}
@@ -511,7 +522,7 @@ public class Main
 		}
 		
 		
-		System.out.println("\nNumber of Accounts: " + accounts.size());
+		System.out.println("\n\033[36mNumber of Accounts: \033[37m" + accounts.size());
 		
 		System.out.println("\nPress Enter to Continue:");
 		scanner.nextLine();
@@ -546,7 +557,7 @@ public class Main
 		System.out.print("  *******************\n\n");
 		
 		System.out.println("\033[33mCustomer Name: \033[37m" +accounts.get(accountID).getCustName());
-		System.out.println("\033[33mBalance: \033[37m$" + accounts.get(accountID).getBalance());
+		System.out.println("\033[33mBalance: \033[37m$" + formatter.format(accounts.get(accountID).getBalance()));
 		
 		System.out.println("\nPress Enter to Continue");
 		scanner.nextLine();
@@ -554,11 +565,40 @@ public class Main
 		mainOptions(accountNum);
 	}
 	
+	public static void withdrawCash(int accountNum)
+	{
+		int accountID = 0;
+		
+		for(int i = 0; i < accounts.size(); i++)
+		{
+			//Check if accountID exists in arraylist
+			if(accounts.get(i).getAccountID() == accountNum)
+			{
+				accountID = i;
+				break;
+			}
+			else
+			{
+				continue;
+			}
+		}
+		
+		cls();
+		System.out.print("  *******************\n");
+		System.out.print("\033[34m");
+		System.out.print("    Bank Of Ireland\n");
+		System.out.print("\033[37m");
+		System.out.print("  *******************\n\n");
+		System.out.println("Withdraw Cash\n");
+	
+		System.out.println("\033[33mCurrent Balance: \033[37m$" + formatter.format(accounts.get(accountID).getBalance()));
+	}
+	
 	//Delete account from arraylist
 	public static void deleteAccount(int accountNum)
 	{
 		Scanner scanner = new Scanner(System.in);
-		String response;
+		String response = "";
 		boolean PINconfirm = false;
 		int PIN = 0;
 		int checkPIN = 0;
@@ -593,28 +633,53 @@ public class Main
 			System.out.println("\033[33mCustomer Name: \033[37m" + accounts.get(accountID).getCustName()); 
 			System.out.print("\n\033[33mConfirm Y/N: \033[37m");
 			
-			response = scanner.nextLine();
-			
-			if(response.equals("Y") || response.equals("y"))
+			try
 			{
-				System.out.print("\033[33mConfirm PIN: \033[37m");
-				checkPIN = scanner.nextInt();
+				response = scanner.nextLine();
 				
-				if(checkPIN == accounts.get(accountID).getPIN())
+				if(response.equals("Y") || response.equals("y"))
 				{
-					cls();
-					PINconfirm = true;
-					accounts.remove(accountID);
-					awr.Write(accounts);
-					System.out.println("Account No. " + accountNum + " deleted");
-					loading();
+					System.out.print("\033[33mConfirm PIN: \033[37m");
+					checkPIN = scanner.nextInt();
+					
+					if(checkPIN == accounts.get(accountID).getPIN())
+					{
+						cls();
+						PINconfirm = true;
+						accounts.remove(accountID);
+						awr.Write(accounts);
+						System.out.println("Account No. " + accountNum + " deleted");
+						loading();
+					}
+					else
+					{
+						System.out.print("\033[31m");
+						System.out.println("PIN Incorrect");
+						System.out.print("\033[37m");
+						
+						try 
+						{
+							Thread.sleep(2000);
+						} 
+						catch (InterruptedException e) 
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+						PINconfirm = false;
+					}
+				}
+				else if(response.equals("N") || response.equals("n"))
+				{
+					mainOptions(accountNum);
 				}
 				else
 				{
 					System.out.print("\033[31m");
-					System.out.println("PIN Incorrect");
+					System.out.println("Invalid Selection");
 					System.out.print("\033[37m");
-					
+		
 					try 
 					{
 						Thread.sleep(2000);
@@ -624,29 +689,24 @@ public class Main
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
-					PINconfirm = false;
 				}
 			}
-			else if(response.equals("N") || response.equals("n"))
-			{
-				mainOptions(accountNum);
-			}
-			else
+			catch(InputMismatchException e)
 			{
 				System.out.print("\033[31m");
-				System.out.println("Invalid Input");
-				System.out.print("\033[37m");
-	
+				System.out.print("Invalid Input");
+				System.out.println("\033[37m");
 				try 
 				{
 					Thread.sleep(2000);
 				} 
-				catch (InterruptedException e) 
+				catch (InterruptedException ee) 
 				{
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					ee.printStackTrace();
 				}
+				cls();
+				deleteAccount(accountNum);
 			}
 		} 
 		while(!response.equals("Y") && !response.equals("y") && !response.equals("N") && !response.equals("n") || PINconfirm == false);
@@ -654,6 +714,7 @@ public class Main
 		openingScreen();
 	}
 	
+	//Clear terminal window
 	public static void cls()
 	{
 		try
@@ -666,6 +727,7 @@ public class Main
 		}
 	}
 	
+	//Show loading screen
 	public static void loading()
 	{
 		System.out.print("Loading...");
@@ -680,6 +742,7 @@ public class Main
 		}
 	}
 	
+	//Exit program
 	public static void exit()
 	{
 		System.exit(0);
