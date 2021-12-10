@@ -19,11 +19,11 @@ public class Main
 		int response;
 		Scanner scanner = new Scanner(System.in);
 		
-		System.out.print("*******************\n");
+		System.out.print("  *******************\n");
 		System.out.print("\033[34m");
-		System.out.print("Bank Of Ireland\n");
+		System.out.print("    Bank Of Ireland\n");
 		System.out.print("\033[37m");
-		System.out.print("*******************\n\n");
+		System.out.print("  *******************\n\n");
 		System.out.println("1) Log In");
 		System.out.println("2) Create Account");
 		System.out.println("3) Admin Options");
@@ -108,11 +108,11 @@ public class Main
 		Scanner scanner = new Scanner(System.in);
 		accounts = awr.Read();
 		
-		System.out.print("*******************\n");
+		System.out.print("  *******************\n");
 		System.out.print("\033[34m");
-		System.out.print("Bank Of Ireland\n");
+		System.out.print("    Bank Of Ireland\n");
 		System.out.print("\033[37m");
-		System.out.print("*******************\n\n");
+		System.out.print("  *******************\n\n");
 		System.out.println("Log In (Enter 0 to return to main menu)\n");
 		System.out.print("Enter Account Number: ");
 		
@@ -261,11 +261,11 @@ public class Main
 				{
 					cls();
 					
-					System.out.print("*******************\n");
+					System.out.print("  *******************\n");
 					System.out.print("\033[34m");
-					System.out.print("Bank Of Ireland\n");
+					System.out.print("    Bank Of Ireland\n");
 					System.out.print("\033[37m");
-					System.out.print("*******************\n\n");
+					System.out.print("  *******************\n\n");
 					System.out.println("Create Account");
 					
 					System.out.print("\nEnter Customer Name: ");
@@ -394,11 +394,11 @@ public class Main
 		Scanner scanner = new Scanner(System.in);
 		int response;
 		
-		System.out.print("*******************\n");
+		System.out.print("  *******************\n");
 		System.out.print("\033[34m");
-		System.out.print("Bank Of Ireland\n");
+		System.out.print("    Bank Of Ireland\n");
 		System.out.print("\033[37m");
-		System.out.print("*******************\n\n");
+		System.out.print("  *******************\n\n");
 		System.out.println("1) Check Balance & History");
 		System.out.println("2) Withdraw Cash");
 		System.out.println("3) Deposit Cash");
@@ -427,6 +427,7 @@ public class Main
 				break;
 				
 			case 5:
+				deleteAccount(accountNum);
 				break;
 				
 			case 6:
@@ -502,15 +503,106 @@ public class Main
 	
 	public static void showBalance(int accountNum)
 	{
+		cls();
 		Scanner scanner = new Scanner(System.in);
 		
-		System.out.println(accounts.get(accountNum-1).getCustName());
-		System.out.println(accounts.get(accountNum-1).getBalance());
+		System.out.print("  *******************\n");
+		System.out.print("\033[34m");
+		System.out.print("    Bank Of Ireland\n");
+		System.out.print("\033[37m");
+		System.out.print("  *******************\n\n");
 		
-		System.out.println("Press Enter to Continue");
+		System.out.println("\033[33mCustomer Name: \033[37m" +accounts.get(accountNum-1).getCustName());
+		System.out.println("\033[33mBalance: \033[37m$" + accounts.get(accountNum-1).getBalance());
+		
+		System.out.println("\nPress Enter to Continue");
 		scanner.nextLine();
 		
 		mainOptions(accountNum);
+	}
+	
+	//Delete account from arraylist
+	public static void deleteAccount(int accountNum)
+	{
+		Scanner scanner = new Scanner(System.in);
+		String response;
+		boolean PINconfirm = false;
+		int PIN;
+		
+		//Show while user has entered wrong input
+		do
+		{
+			cls();
+			System.out.print("  *******************\n");
+			System.out.print("\033[34m");
+			System.out.print("    Bank Of Ireland\n");
+			System.out.print("\033[37m");
+			System.out.print("  *******************\n\n");
+			
+			System.out.println("\033[33mDelete Account:");
+			System.out.println("\nAccount No: \033[37m"+ accountNum);
+			System.out.println("\033[33mCustomer Name: \033[37m" + accounts.get(accountNum-1).getCustName()); 
+			System.out.print("\n\033[33mConfirm Y/N:\033[37m");
+			
+			response = scanner.nextLine();
+			
+			if(response.equals("Y") || response.equals("y"))
+			{
+				System.out.print("\033[33mConfirm PIN:\033[37m");
+				PIN = scanner.nextInt();
+				
+				if(PIN == accounts.get(accountNum-1).getPIN())
+				{
+					cls();
+					PINconfirm = true;
+					accounts.remove(accountNum-1);
+					awr.Write(accounts);
+					System.out.println("Account No. " + accountNum + " deleted");
+					loading();
+				}
+				else
+				{
+					System.out.print("\033[31m");
+					System.out.println("PIN Incorrect");
+					System.out.print("\033[37m");
+					
+					try 
+					{
+						Thread.sleep(2000);
+					} 
+					catch (InterruptedException e) 
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					PINconfirm = false;
+				}
+			}
+			else if(response.equals("N") || response.equals("n"))
+			{
+				mainOptions(accountNum);
+			}
+			else
+			{
+				System.out.print("\033[31m");
+				System.out.println("Invalid Input");
+				System.out.print("\033[37m");
+	
+				try 
+				{
+					Thread.sleep(2000);
+				} 
+				catch (InterruptedException e) 
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		} 
+		while(!response.equals("Y") && !response.equals("y") && !response.equals("N") && !response.equals("n") || PINconfirm == false);
+		
+		displayOpeningScreen();
 	}
 	
 	public static void cls()
