@@ -9,10 +9,11 @@ public class Main
 	
 	public static void main(String[] args) 
 	{	
-		displayOpeningScreen();
+		accounts = awr.Read();
+		openingScreen();
 	}
 	
-	public static void displayOpeningScreen()
+	public static void openingScreen()
 	{
 		cls();
 		
@@ -42,7 +43,7 @@ public class Main
 				
 			case 2:
 				cls();
-				displayCreateAccount();
+				createAccount();
 				break;
 				
 			case 3:
@@ -69,7 +70,7 @@ public class Main
 				}
 				
 				cls();
-				displayOpeningScreen();
+				openingScreen();
 			}
 		}
 		catch(InputMismatchException e)
@@ -89,7 +90,7 @@ public class Main
 			}
 			
 			cls();
-			displayOpeningScreen();
+			openingScreen();
 		}
 		finally
 		{
@@ -104,9 +105,9 @@ public class Main
 		cls();
 		
 		int response;
+		int PIN = 0;
 		boolean checkResponse = false;
 		Scanner scanner = new Scanner(System.in);
-		accounts = awr.Read();
 		
 		System.out.print("  *******************\n");
 		System.out.print("\033[34m");
@@ -122,7 +123,7 @@ public class Main
 			
 			if(response == 0)
 			{
-				displayOpeningScreen();
+				openingScreen();
 			}
 			
 			//Iterate over arraylist
@@ -144,7 +145,20 @@ public class Main
 			if(checkResponse)
 			{
 				//Get PIN for account
-				int PIN = accounts.get(response-1).getPIN();
+				//Iterate over arraylist
+				for(int i = 0; i < accounts.size(); i++)
+				{
+					//Check if accountID exists in arraylist
+					if(accounts.get(i).getAccountID() == response)
+					{
+						PIN = accounts.get(i).getPIN();
+						break;
+					}
+					else
+					{
+						continue;
+					}
+				}
 				
 				System.out.print("Enter PIN: ");
 				try
@@ -244,12 +258,13 @@ public class Main
 		}
 	}
 	
-	public static void displayCreateAccount()
+	public static void createAccount()
 	{
 		boolean confirmation = false;
 		String custName;
 		int PIN;
 		double balance;
+		int accountID;
 			
 		do
 		{	
@@ -321,9 +336,12 @@ public class Main
 					if(response.equals("Y") || response.equals("y"))
 					{
 						confirmation = true;
-						int accountID = accounts.size()+1;
+						
+						//Assign accountID as the next number after last account in arraylist
+						accountID = (accounts.get((accounts.size())-1).getAccountID()+1);
 						accounts.add(new Account(custName, PIN, balance, accountID));
 						accounts = awr.Write(accounts);
+						
 						cls();
 						System.out.print("\033[32m");
 						System.out.println("New Account Created");
@@ -335,7 +353,7 @@ public class Main
 						System.out.println("\nPress Enter to Continue:");
 						scanner.nextLine();
 						
-						displayOpeningScreen();
+						openingScreen();
 						
 					}
 					else if(response.equals("N") || response.equals("n"))
@@ -346,7 +364,7 @@ public class Main
 					}
 					else if(response.equals("0"))
 					{
-						displayOpeningScreen();
+						openingScreen();
 					}
 					else
 					{
@@ -383,7 +401,7 @@ public class Main
 					ee.printStackTrace();
 				}
 				
-				displayCreateAccount();
+				createAccount();
 			}
 		} while(confirmation == false);
 	}
@@ -433,7 +451,7 @@ public class Main
 			case 6:
 				cls();
 				loading();
-				displayOpeningScreen();
+				openingScreen();
 			
 			default:
 				System.out.print("\033[31mInvalid Selection");
@@ -498,13 +516,28 @@ public class Main
 		System.out.println("\nPress Enter to Continue:");
 		scanner.nextLine();
 		
-		displayOpeningScreen();
+		openingScreen();
 	}
 	
 	public static void showBalance(int accountNum)
 	{
 		cls();
 		Scanner scanner = new Scanner(System.in);
+		int accountID = 0;
+		
+		for(int i = 0; i < accounts.size(); i++)
+		{
+			//Check if accountID exists in arraylist
+			if(accounts.get(i).getAccountID() == accountNum)
+			{
+				accountID = i;
+				break;
+			}
+			else
+			{
+				continue;
+			}
+		}
 		
 		System.out.print("  *******************\n");
 		System.out.print("\033[34m");
@@ -512,8 +545,8 @@ public class Main
 		System.out.print("\033[37m");
 		System.out.print("  *******************\n\n");
 		
-		System.out.println("\033[33mCustomer Name: \033[37m" +accounts.get(accountNum-1).getCustName());
-		System.out.println("\033[33mBalance: \033[37m$" + accounts.get(accountNum-1).getBalance());
+		System.out.println("\033[33mCustomer Name: \033[37m" +accounts.get(accountID).getCustName());
+		System.out.println("\033[33mBalance: \033[37m$" + accounts.get(accountID).getBalance());
 		
 		System.out.println("\nPress Enter to Continue");
 		scanner.nextLine();
@@ -527,7 +560,23 @@ public class Main
 		Scanner scanner = new Scanner(System.in);
 		String response;
 		boolean PINconfirm = false;
-		int PIN;
+		int PIN = 0;
+		int checkPIN = 0;
+		int accountID = 0;
+		
+		for(int i = 0; i < accounts.size(); i++)
+		{
+			//Check if accountID exists in arraylist
+			if(accounts.get(i).getAccountID() == accountNum)
+			{
+				accountID = i;
+				break;
+			}
+			else
+			{
+				continue;
+			}
+		}
 		
 		//Show while user has entered wrong input
 		do
@@ -541,21 +590,21 @@ public class Main
 			
 			System.out.println("\033[33mDelete Account:");
 			System.out.println("\nAccount No: \033[37m"+ accountNum);
-			System.out.println("\033[33mCustomer Name: \033[37m" + accounts.get(accountNum-1).getCustName()); 
-			System.out.print("\n\033[33mConfirm Y/N:\033[37m");
+			System.out.println("\033[33mCustomer Name: \033[37m" + accounts.get(accountID).getCustName()); 
+			System.out.print("\n\033[33mConfirm Y/N: \033[37m");
 			
 			response = scanner.nextLine();
 			
 			if(response.equals("Y") || response.equals("y"))
 			{
-				System.out.print("\033[33mConfirm PIN:\033[37m");
-				PIN = scanner.nextInt();
+				System.out.print("\033[33mConfirm PIN: \033[37m");
+				checkPIN = scanner.nextInt();
 				
-				if(PIN == accounts.get(accountNum-1).getPIN())
+				if(checkPIN == accounts.get(accountID).getPIN())
 				{
 					cls();
 					PINconfirm = true;
-					accounts.remove(accountNum-1);
+					accounts.remove(accountID);
 					awr.Write(accounts);
 					System.out.println("Account No. " + accountNum + " deleted");
 					loading();
@@ -602,7 +651,7 @@ public class Main
 		} 
 		while(!response.equals("Y") && !response.equals("y") && !response.equals("N") && !response.equals("n") || PINconfirm == false);
 		
-		displayOpeningScreen();
+		openingScreen();
 	}
 	
 	public static void cls()
