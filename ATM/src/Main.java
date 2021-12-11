@@ -265,6 +265,7 @@ public class Main
 		int PIN;
 		double balance;
 		int accountID;
+		String response;
 			
 		do
 		{	
@@ -315,8 +316,6 @@ public class Main
 				cls();
 				loading();
 				
-				String response;
-				
 				do
 				{
 					cls();
@@ -333,8 +332,10 @@ public class Main
 					
 					response = scanner.nextLine();
 					
-					if(response.equals("Y") || response.equals("y"))
+					switch(response)
 					{
+					case "Y":
+					case "y":
 						confirmation = true;
 						
 						//If arraylist is empty, assign first account to 1
@@ -364,19 +365,17 @@ public class Main
 						
 						openingScreen();
 						
-					}
-					else if(response.equals("N") || response.equals("n"))
-					{
+					case "N":
+					case "n":
 						confirmation = false;
 						cls();
 						loading();
-					}
-					else if(response.equals("0"))
-					{
+						createAccount();
+	
+					case "0":
 						openingScreen();
-					}
-					else
-					{
+	
+					default:
 						confirmation = false;
 						System.out.print("\033[31m");
 						System.out.println("Invalid Input");
@@ -392,7 +391,9 @@ public class Main
 							e.printStackTrace();
 						}
 					}
+
 				} while(!response.equals("Y") && !response.equals("y") && !response.equals("N") && !response.equals("n") && !response.equals("0"));
+
 			}
 			catch(InputMismatchException e)
 			{
@@ -420,12 +421,33 @@ public class Main
 		cls();
 		Scanner scanner = new Scanner(System.in);
 		int response;
+		int accountID = 0;
+		String custName;
+		
+		for(int i = 0; i < accounts.size(); i++)
+		{
+			//Check if accountID exists in arraylist
+			if(accounts.get(i).getAccountID() == accountNum)
+			{
+				accountID = i;
+				break;
+			}
+			else
+			{
+				continue;
+			}
+		}
+		
+		custName = accounts.get(accountID).getCustName();
 		
 		System.out.print("  *******************\n");
 		System.out.print("\033[34m");
 		System.out.print("    Bank Of Ireland\n");
 		System.out.print("\033[37m");
 		System.out.print("  *******************\n\n");
+		
+		System.out.println("\033[32m" + custName + " logged in\033[37m");
+		System.out.println();
 		System.out.println("1) Check Balance & History");
 		System.out.println("2) Withdraw Cash");
 		System.out.println("3) Deposit Cash");
@@ -568,6 +590,9 @@ public class Main
 	public static void withdrawCash(int accountNum)
 	{
 		int accountID = 0;
+		int amount;
+		String option;
+		Scanner scanner = new Scanner(System.in);
 		
 		for(int i = 0; i < accounts.size(); i++)
 		{
@@ -583,15 +608,159 @@ public class Main
 			}
 		}
 		
-		cls();
-		System.out.print("  *******************\n");
-		System.out.print("\033[34m");
-		System.out.print("    Bank Of Ireland\n");
-		System.out.print("\033[37m");
-		System.out.print("  *******************\n\n");
-		System.out.println("Withdraw Cash\n");
-	
-		System.out.println("\033[33mCurrent Balance: \033[37m$" + formatter.format(accounts.get(accountID).getBalance()));
+		double balance = accounts.get(accountID).getBalance();
+		
+		try
+		{
+			cls();
+			System.out.print("  *******************\n");
+			System.out.print("    \033[34mBank Of Ireland\033[37m\n");
+			System.out.print("  *******************\n\n");
+			System.out.println("Withdraw Cash\n");
+		
+			System.out.println("\033[33mCurrent Balance: \033[37m$" + formatter.format(balance));
+			
+			System.out.println("\n\nA) $200        B) $100");
+			System.out.println("\nC) $50         D) $20");
+			System.out.println("\nE) $10         F) $5");
+			System.out.println("\nG) Other       H) Exit");
+			System.out.print("\n\033[33mSelect Option: \033[37m");
+		
+			option = scanner.nextLine();
+			
+			switch(option)
+			{
+			case "A":
+			case "a":
+				if(balance - 200 >= 0)
+				{
+					System.out.println("Withdrawing $200");
+					accounts.get(accountID).setBalance(balance-200);
+					awr.Write(accounts);
+					cls();
+					loading();
+				}
+				else
+				{
+					System.out.print("\033[31m");
+					System.out.println("Not Enough Funds");
+					System.out.print("\033[37m");
+					
+					try 
+					{
+						Thread.sleep(2000);
+					} 
+					catch (InterruptedException ee) 
+					{
+						// TODO Auto-generated catch block
+						ee.printStackTrace();
+					}
+					
+					withdrawCash(accountNum);
+				}
+				break;
+				
+			case "B":
+			case "b":
+			case "C":
+			case "c":
+			case "D":
+			case "d":
+			case "E":
+			case "e":
+			case "F":
+			case "f":
+			case "G":
+			case "g":
+				System.out.print("\033[33mEnter Amount to Withdraw: \033[37m$");
+				amount = scanner.nextInt();
+				
+				if(amount % 5 != 0)
+				{
+					System.out.println("\033[31mAmount must be in notes\033[37m");
+					
+					try 
+					{
+						Thread.sleep(2000);
+					} 
+					catch (InterruptedException ee) 
+					{
+						// TODO Auto-generated catch block
+						ee.printStackTrace();
+					}
+					
+					withdrawCash(accountNum);
+				}
+				else if(balance - amount >= 0)
+				{
+					System.out.println("Withdrawing $" + amount);
+					accounts.get(accountID).setBalance(balance-amount);
+					awr.Write(accounts);
+					cls();
+					loading();
+				}
+				else
+				{
+					System.out.print("\033[31m");
+					System.out.println("Not Enough Funds");
+					System.out.print("\033[37m");
+					
+					try 
+					{
+						Thread.sleep(2000);
+					} 
+					catch (InterruptedException ee) 
+					{
+						// TODO Auto-generated catch block
+						ee.printStackTrace();
+					}
+					
+					withdrawCash(accountNum);
+				}
+				mainOptions(accountNum);
+				break;
+				
+			case "H":
+			case "h":
+				mainOptions(accountNum);
+			default:
+				System.out.print("\033[31m");
+				System.out.println("Invalid Input");
+				System.out.print("\033[37m");
+				
+				try 
+				{
+					Thread.sleep(2000);
+				} 
+				catch (InterruptedException ee) 
+				{
+					// TODO Auto-generated catch block
+					ee.printStackTrace();
+				}
+				
+				withdrawCash(accountNum);
+			}
+			
+			
+		}
+		catch(InputMismatchException e)
+		{
+			System.out.print("\033[31m");
+			System.out.println("Invalid Input");
+			System.out.print("\033[37m");
+			
+			try 
+			{
+				Thread.sleep(2000);
+			} 
+			catch (InterruptedException ee) 
+			{
+				// TODO Auto-generated catch block
+				ee.printStackTrace();
+			}
+			
+			withdrawCash(accountNum);
+		}
 	}
 	
 	//Delete account from arraylist
@@ -637,8 +806,10 @@ public class Main
 			{
 				response = scanner.nextLine();
 				
-				if(response.equals("Y") || response.equals("y"))
+				switch(response)
 				{
+				case "Y":
+				case "y":
 					System.out.print("\033[33mConfirm PIN: \033[37m");
 					checkPIN = scanner.nextInt();
 					
@@ -669,13 +840,12 @@ public class Main
 						
 						PINconfirm = false;
 					}
-				}
-				else if(response.equals("N") || response.equals("n"))
-				{
+
+				case "N":
+				case "n":
 					mainOptions(accountNum);
-				}
-				else
-				{
+
+				default:
 					System.out.print("\033[31m");
 					System.out.println("Invalid Selection");
 					System.out.print("\033[37m");
