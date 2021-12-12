@@ -1,5 +1,6 @@
 import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class Account implements Serializable
 {
@@ -10,6 +11,7 @@ public class Account implements Serializable
 	private String custName;
 	private int PIN;
 	private double balance = 0;
+	private ArrayList<String> history = new ArrayList<String>();
 	
 	Account(String custName, int PIN, double balance, int accountID)
 	{
@@ -17,6 +19,7 @@ public class Account implements Serializable
 		this.setPIN(PIN);
 		this.setBalance(balance);
 		this.setAccountID(accountID);
+		this.setHistory(history);
 	}
 	
 	public void setAccountID(int accountID)
@@ -39,6 +42,11 @@ public class Account implements Serializable
 		this.balance = balance;
 	}
 	
+	public void setHistory(ArrayList<String> history)
+	{
+		this.history = history;
+	}
+	
 	public int getAccountID()
 	{
 		return this.accountID;
@@ -57,6 +65,11 @@ public class Account implements Serializable
 	public double getBalance()
 	{
 		return this.balance;
+	}
+	
+	public ArrayList<String> getHistory()
+	{
+		return this.history;
 	}
 	
 	public String toString()

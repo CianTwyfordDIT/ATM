@@ -1,5 +1,7 @@
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -463,7 +465,7 @@ public class Main
 			switch(response)
 			{
 			case 1:
-				showBalance(accountNum);
+				showBalance(accountNum, accountID);
 				break;
 				
 			case 2:
@@ -471,6 +473,7 @@ public class Main
 				break;
 				
 			case 3:
+				depositCash(accountNum);
 				break;
 			
 			case 4:
@@ -552,25 +555,12 @@ public class Main
 		openingScreen();
 	}
 	
-	public static void showBalance(int accountNum)
+	public static void showBalance(int accountNum, int accountID)
 	{
 		cls();
 		Scanner scanner = new Scanner(System.in);
-		int accountID = 0;
-		
-		for(int i = 0; i < accounts.size(); i++)
-		{
-			//Check if accountID exists in arraylist
-			if(accounts.get(i).getAccountID() == accountNum)
-			{
-				accountID = i;
-				break;
-			}
-			else
-			{
-				continue;
-			}
-		}
+		ArrayList<String> history = new ArrayList<String>();
+		history = accounts.get(accountID).getHistory();
 		
 		System.out.print("  *******************\n");
 		System.out.print("\033[34m");
@@ -580,6 +570,27 @@ public class Main
 		
 		System.out.println("\033[33mCustomer Name: \033[37m" +accounts.get(accountID).getCustName());
 		System.out.println("\033[33mBalance: \033[37m$" + formatter.format(accounts.get(accountID).getBalance()));
+		
+		System.out.println("\n\nAccount History");
+		
+		if(history.size() > 0)
+		{
+			for(int i = 0; i < history.size(); i++)
+			{
+				if(history.get(i).charAt(0) == 'W')
+				{
+					System.out.println("\033[31m" + history.get(i) + "\033[37m");
+				}
+				else
+				{
+					System.out.println("\033[32m" + history.get(i) + "\033[37m");
+				}
+			}
+		}
+		else
+		{
+			System.out.println("\nNo Previous Account History");
+		}
 		
 		System.out.println("\nPress Enter to Continue");
 		scanner.nextLine();
@@ -592,6 +603,7 @@ public class Main
 		int accountID = 0;
 		int amount;
 		String option;
+		String response = "";
 		Scanner scanner = new Scanner(System.in);
 		
 		for(int i = 0; i < accounts.size(); i++)
@@ -632,44 +644,40 @@ public class Main
 			{
 			case "A":
 			case "a":
-				if(balance - 200 >= 0)
-				{
-					System.out.println("Withdrawing $200");
-					accounts.get(accountID).setBalance(balance-200);
-					awr.Write(accounts);
-					cls();
-					loading();
-				}
-				else
-				{
-					System.out.print("\033[31m");
-					System.out.println("Not Enough Funds");
-					System.out.print("\033[37m");
-					
-					try 
-					{
-						Thread.sleep(2000);
-					} 
-					catch (InterruptedException ee) 
-					{
-						// TODO Auto-generated catch block
-						ee.printStackTrace();
-					}
-					
-					withdrawCash(accountNum);
-				}
+				amount = -200;
+				response = withdrawDeposit(balance, accountID, accountNum, amount, 'W');
 				break;
 				
 			case "B":
 			case "b":
+				amount = -100;
+				response = withdrawDeposit(balance, accountID, accountNum, amount, 'W');
+				break;
+				
 			case "C":
 			case "c":
+				amount = -50;
+				response = withdrawDeposit(balance, accountID, accountNum, amount, 'W');
+				break;
+				
 			case "D":
 			case "d":
+				amount = -20;
+				response = withdrawDeposit(balance, accountID, accountNum, amount, 'W');
+				break;
+				
 			case "E":
 			case "e":
+				amount = -10;
+				response = withdrawDeposit(balance, accountID, accountNum, amount, 'W');
+				break;
+				
 			case "F":
 			case "f":
+				amount = -5;
+				response = withdrawDeposit(balance, accountID, accountNum, amount, 'W');
+				break;
+				
 			case "G":
 			case "g":
 				System.out.print("\033[33mEnter Amount to Withdraw: \033[37m$");
@@ -691,31 +699,9 @@ public class Main
 					
 					withdrawCash(accountNum);
 				}
-				else if(balance - amount >= 0)
+				else 
 				{
-					System.out.println("Withdrawing $" + amount);
-					accounts.get(accountID).setBalance(balance-amount);
-					awr.Write(accounts);
-					cls();
-					loading();
-				}
-				else
-				{
-					System.out.print("\033[31m");
-					System.out.println("Not Enough Funds");
-					System.out.print("\033[37m");
-					
-					try 
-					{
-						Thread.sleep(2000);
-					} 
-					catch (InterruptedException ee) 
-					{
-						// TODO Auto-generated catch block
-						ee.printStackTrace();
-					}
-					
-					withdrawCash(accountNum);
+					withdrawDeposit(balance, accountID, accountNum, -amount, 'W');
 				}
 				mainOptions(accountNum);
 				break;
@@ -741,7 +727,19 @@ public class Main
 				withdrawCash(accountNum);
 			}
 			
+			System.out.println(response);
+			try 
+			{
+				Thread.sleep(2000);
+			} 
+			catch (InterruptedException ee) 
+			{
+				// TODO Auto-generated catch block
+				ee.printStackTrace();
+			}
 			
+			mainOptions(accountNum);
+				
 		}
 		catch(InputMismatchException e)
 		{
@@ -761,6 +759,208 @@ public class Main
 			
 			withdrawCash(accountNum);
 		}
+	}
+	
+	public static void depositCash(int accountNum)
+	{
+		int accountID = 0;
+		int amount;
+		String option;
+		String response = "";
+		Scanner scanner = new Scanner(System.in);
+		
+		for(int i = 0; i < accounts.size(); i++)
+		{
+			//Check if accountID exists in arraylist
+			if(accounts.get(i).getAccountID() == accountNum)
+			{
+				accountID = i;
+				break;
+			}
+			else
+			{
+				continue;
+			}
+		}
+		
+		double balance = accounts.get(accountID).getBalance();
+		
+		try
+		{
+			cls();
+			System.out.print("  *******************\n");
+			System.out.print("    \033[34mBank Of Ireland\033[37m\n");
+			System.out.print("  *******************\n\n");
+			System.out.println("Deposit Cash\n");
+		
+			System.out.println("\033[33mCurrent Balance: \033[37m$" + formatter.format(balance));
+			
+			System.out.println("\n\nA) $200        B) $100");
+			System.out.println("\nC) $50         D) $20");
+			System.out.println("\nE) $10         F) $5");
+			System.out.println("\nG) Other       H) Exit");
+			System.out.print("\n\033[33mSelect Option: \033[37m");
+		
+			option = scanner.nextLine();
+			
+			switch(option)
+			{
+			case "A":
+			case "a":
+				amount = 200;
+				response = withdrawDeposit(balance, accountID, accountNum, amount, 'D');
+				break;
+				
+			case "B":
+			case "b":
+				amount = 100;
+				response = withdrawDeposit(balance, accountID, accountNum, amount, 'D');
+				break;
+				
+			case "C":
+			case "c":
+				amount = 50;
+				response = withdrawDeposit(balance, accountID, accountNum, amount, 'D');
+				break;
+				
+			case "D":
+			case "d":
+				amount = 20;
+				response = withdrawDeposit(balance, accountID, accountNum, amount, 'D');
+				break;
+				
+			case "E":
+			case "e":
+				amount = 10;
+				response = withdrawDeposit(balance, accountID, accountNum, amount, 'D');
+				break;
+				
+			case "F":
+			case "f":
+				amount = 5;
+				response = withdrawDeposit(balance, accountID, accountNum, amount, 'D');
+				break;
+				
+			case "G":
+			case "g":
+				System.out.print("\033[33mEnter Amount to Deposit: \033[37m$");
+				amount = scanner.nextInt();
+				
+				if(amount % 5 != 0)
+				{
+					System.out.println("\033[31mAmount must be in notes\033[37m");
+					
+					try 
+					{
+						Thread.sleep(2000);
+					} 
+					catch (InterruptedException ee) 
+					{
+						// TODO Auto-generated catch block
+						ee.printStackTrace();
+					}
+					
+					depositCash(accountNum);
+				}
+				else 
+				{
+					withdrawDeposit(balance, accountID, accountNum, amount, 'D');
+				}
+				mainOptions(accountNum);
+				break;
+				
+			case "H":
+			case "h":
+				mainOptions(accountNum);
+			default:
+				System.out.print("\033[31m");
+				System.out.println("Invalid Input");
+				System.out.print("\033[37m");
+				
+				try 
+				{
+					Thread.sleep(2000);
+				} 
+				catch (InterruptedException ee) 
+				{
+					// TODO Auto-generated catch block
+					ee.printStackTrace();
+				}
+				
+				depositCash(accountNum);
+			}
+			
+			System.out.println(response);
+			try 
+			{
+				Thread.sleep(2000);
+			} 
+			catch (InterruptedException ee) 
+			{
+				// TODO Auto-generated catch block
+				ee.printStackTrace();
+			}
+			
+			mainOptions(accountNum);
+				
+		}
+		catch(InputMismatchException e)
+		{
+			System.out.print("\033[31m");
+			System.out.println("Invalid Input");
+			System.out.print("\033[37m");
+			
+			try 
+			{
+				Thread.sleep(2000);
+			} 
+			catch (InterruptedException ee) 
+			{
+				// TODO Auto-generated catch block
+				ee.printStackTrace();
+			}
+			
+			depositCash(accountNum);
+		}
+	}
+	
+	//Method to either withdraw from account or deposit to account
+	public static String withdrawDeposit(double balance, int accountID, int accountNum, int amount, char operation)
+	{
+		String response = "";
+		ArrayList<String> history = new ArrayList<String>();
+		history = accounts.get(accountID).getHistory();
+		
+		if(balance - amount >= 0)
+		{
+			accounts.get(accountID).setBalance(balance + amount);
+			
+			Date date = new Date();
+			SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+			String dateTime = formatter.format(date);
+			
+			if(operation == 'W')
+			{
+				response = "$" + -amount + " withdrawn";
+				String w = "Withdraw: $" + -amount + " - " + dateTime;
+				history.add(w);
+			}
+			if(operation == 'D')
+			{
+				response = "$" + amount + " deposited";
+				String d = "Deposit: $" + amount + " - " + dateTime;
+				history.add(d);
+			}
+			
+			accounts.get(accountID).setHistory(history);
+			awr.Write(accounts);
+		}
+		else
+		{
+			response = "\033[31mNot Enough Funds\033[37m";
+		}
+		
+		return response;
 	}
 	
 	//Delete account from arraylist
