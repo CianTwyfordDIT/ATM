@@ -6,7 +6,6 @@ public class Account implements Serializable
 {
 	static DecimalFormat formatter = new DecimalFormat("#,###.00");
 	private static final long serialVersionUID = 1L;
-	protected static int numAccounts;
 	private int accountID;
 	private String custName;
 	private int PIN;
@@ -15,10 +14,10 @@ public class Account implements Serializable
 	
 	Account(String custName, int PIN, double balance, int accountID)
 	{
-		this.setCustName(custName);
-		this.setPIN(PIN);
-		this.setBalance(balance);
-		this.setAccountID(accountID);
+		this.custName = custName;
+		this.PIN = PIN;
+		this.balance = balance;
+		this.accountID = accountID;
 		this.setHistory(history);
 	}
 	

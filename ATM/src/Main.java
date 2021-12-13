@@ -399,9 +399,7 @@ public class Main
 			}
 			catch(InputMismatchException e)
 			{
-				System.out.print("\033[31m");
-				System.out.println("Invalid Input");
-				System.out.print("\033[37m");
+				System.out.println("\033[31mInvalid Input\033[37m");
 				
 				try 
 				{
@@ -443,9 +441,7 @@ public class Main
 		custName = accounts.get(accountID).getCustName();
 		
 		System.out.print("  *******************\n");
-		System.out.print("\033[34m");
-		System.out.print("    Bank Of Ireland\n");
-		System.out.print("\033[37m");
+		System.out.print("\033[34m    Bank Of Ireland\033[37m\n");
 		System.out.print("  *******************\n\n");
 		
 		System.out.println("\033[32m" + custName + " logged in\033[37m");
@@ -507,7 +503,7 @@ public class Main
 		}
 		catch(InputMismatchException e)
 		{
-			System.out.print("\033[31mInvalid Selection\033[37m");
+			System.out.print("\033[31mInvalid Input\033[37m");
 			
 			try 
 			{
@@ -563,15 +559,18 @@ public class Main
 		history = accounts.get(accountID).getHistory();
 		
 		System.out.print("  *******************\n");
-		System.out.print("\033[34m");
-		System.out.print("    Bank Of Ireland\n");
-		System.out.print("\033[37m");
+		System.out.print("\033[34m    Bank Of Ireland\033[37m\n");
 		System.out.print("  *******************\n\n");
 		
 		System.out.println("\033[33mCustomer Name: \033[37m" +accounts.get(accountID).getCustName());
 		System.out.println("\033[33mBalance: \033[37m$" + formatter.format(accounts.get(accountID).getBalance()));
 		
-		System.out.println("\n\nAccount History");
+		System.out.println("\n\n\t\t\t\t    ---------------");
+		System.out.println("\033[33m\t\t\t\t    Account History\033[37m");
+		System.out.println("\t\t\t\t    ---------------");
+		System.out.println();
+		System.out.println("Withdrawals\t\t\t\t\t\t\t\t      Deposits");
+		System.out.println("--------------------------------------------------------------------------------------");
 		
 		if(history.size() > 0)
 		{
@@ -583,7 +582,7 @@ public class Main
 				}
 				else
 				{
-					System.out.println("\033[32m" + history.get(i) + "\033[37m");
+					System.out.println("\t\t\t\t\t\t\033[32m" + history.get(i) + "\033[37m");
 				}
 			}
 		}
@@ -592,7 +591,7 @@ public class Main
 			System.out.println("\nNo Previous Account History");
 		}
 		
-		System.out.println("\nPress Enter to Continue");
+		System.out.println("\n\n\nPress Enter to Continue");
 		scanner.nextLine();
 		
 		mainOptions(accountNum);
@@ -710,9 +709,7 @@ public class Main
 			case "h":
 				mainOptions(accountNum);
 			default:
-				System.out.print("\033[31m");
-				System.out.println("Invalid Input");
-				System.out.print("\033[37m");
+				System.out.println("\033[31mInvalid Input\033[37m");
 				
 				try 
 				{
@@ -743,9 +740,7 @@ public class Main
 		}
 		catch(InputMismatchException e)
 		{
-			System.out.print("\033[31m");
-			System.out.println("Invalid Input");
-			System.out.print("\033[37m");
+			System.out.println("\033[31mInvalid Input\033[37m");
 			
 			try 
 			{
@@ -873,9 +868,7 @@ public class Main
 			case "h":
 				mainOptions(accountNum);
 			default:
-				System.out.print("\033[31m");
-				System.out.println("Invalid Input");
-				System.out.print("\033[37m");
+				System.out.println("\033[31mInvalid Input\033[37m");
 				
 				try 
 				{
@@ -906,9 +899,7 @@ public class Main
 		}
 		catch(InputMismatchException e)
 		{
-			System.out.print("\033[31m");
-			System.out.println("Invalid Input");
-			System.out.print("\033[37m");
+			System.out.println("\033[31mInvalid Input\033[37m");
 			
 			try 
 			{
@@ -931,24 +922,24 @@ public class Main
 		ArrayList<String> history = new ArrayList<String>();
 		history = accounts.get(accountID).getHistory();
 		
-		if(balance - amount >= 0)
+		if(balance + amount >= 0 && operation == 'W' || operation == 'D')
 		{
 			accounts.get(accountID).setBalance(balance + amount);
 			
 			Date date = new Date();
-			SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy");
+			SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss dd-MMM-yyyy");
 			String dateTime = formatter.format(date);
 			
 			if(operation == 'W')
 			{
 				response = "$" + -amount + " withdrawn";
-				String w = "Withdraw: $" + -amount + " - " + dateTime;
+				String w = "Withdraw: -$" + -amount + " at " + dateTime;
 				history.add(w);
 			}
 			if(operation == 'D')
 			{
 				response = "$" + amount + " deposited";
-				String d = "Deposit: $" + amount + " - " + dateTime;
+				String d = "Deposit: $" + amount + " at " + dateTime;
 				history.add(d);
 			}
 			
@@ -992,9 +983,7 @@ public class Main
 		{
 			cls();
 			System.out.print("  *******************\n");
-			System.out.print("\033[34m");
-			System.out.print("    Bank Of Ireland\n");
-			System.out.print("\033[37m");
+			System.out.print("\033[34m    Bank Of Ireland\033[37m\n");
 			System.out.print("  *******************\n\n");
 			
 			System.out.println("\033[33mDelete Account:");
@@ -1024,9 +1013,7 @@ public class Main
 					}
 					else
 					{
-						System.out.print("\033[31m");
-						System.out.println("PIN Incorrect");
-						System.out.print("\033[37m");
+						System.out.println("\033[31mPIN Incorrect\033[37m");
 						
 						try 
 						{
@@ -1040,15 +1027,15 @@ public class Main
 						
 						PINconfirm = false;
 					}
+					break;
 
 				case "N":
 				case "n":
 					mainOptions(accountNum);
+					break;
 
 				default:
-					System.out.print("\033[31m");
-					System.out.println("Invalid Selection");
-					System.out.print("\033[37m");
+					System.out.println("\033[31mInvalid Selection\033[37m");
 		
 					try 
 					{
@@ -1063,9 +1050,8 @@ public class Main
 			}
 			catch(InputMismatchException e)
 			{
-				System.out.print("\033[31m");
-				System.out.print("Invalid Input");
-				System.out.println("\033[37m");
+				System.out.print("\033[31mInvalid Input\033[37m");
+				
 				try 
 				{
 					Thread.sleep(2000);
@@ -1075,6 +1061,7 @@ public class Main
 					// TODO Auto-generated catch block
 					ee.printStackTrace();
 				}
+				
 				cls();
 				deleteAccount(accountNum);
 			}
