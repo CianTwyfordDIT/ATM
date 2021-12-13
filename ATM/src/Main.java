@@ -51,7 +51,51 @@ public class Main
 				break;
 				
 			case 3:
-				displayAccounts();
+				//Check admin password to gain access
+				int checkPassword;
+				try
+				{
+					System.out.print("Password: ");
+					checkPassword = scanner.nextInt();
+					scanner.nextLine();
+				
+					if(checkPassword == adminPassword)
+					{
+						displayAccounts();
+					}
+					else
+					{
+						System.out.println("\033[31mPassword Incorrect\033[37m");
+						
+						try 
+						{
+							Thread.sleep(2000);
+						} 
+						catch (InterruptedException e) 
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+						openingScreen();
+					}
+				}
+				catch(InputMismatchException e)
+				{
+					System.out.println("\033[31mInvalid Input\033[37m");
+					
+					try 
+					{
+						Thread.sleep(2000);
+					} 
+					catch (InterruptedException ee) 
+					{
+						// TODO Auto-generated catch block
+						ee.printStackTrace();
+					}
+					
+					openingScreen();
+				}
 				break;
 			
 			case 4:
@@ -219,9 +263,7 @@ public class Main
 			}
 			else
 			{
-				System.out.print("\033[31m");
-				System.out.println("Account No. " + response + " Doesn't Exist");
-				System.out.print("\033[37m");
+				System.out.println("\033[31mAccount No. " + response + " Doesn't Exist\033[37m");
 				
 				try 
 				{
@@ -548,51 +590,6 @@ public class Main
 		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(System.in);
 		
-		try
-		{
-			System.out.print("Password: ");
-			checkPassword = scanner.nextInt();
-			scanner.nextLine();
-		
-			if(checkPassword == adminPassword)
-			{
-				cls();
-			}
-			else
-			{
-				System.out.println("\033[31mPassword Incorrect\033[37m");
-				
-				try 
-				{
-					Thread.sleep(2000);
-				} 
-				catch (InterruptedException e) 
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				openingScreen();
-			}
-		}
-		catch(InputMismatchException e)
-		{
-			System.out.println("\033[31mInvalid Input\033[37m");
-			
-			try 
-			{
-				Thread.sleep(2000);
-			} 
-			catch (InterruptedException ee) 
-			{
-				// TODO Auto-generated catch block
-				ee.printStackTrace();
-			}
-			
-			displayAccounts();
-		}
-		
-		
 		accounts = awr.Read();
 		
 		for(int i = 0; i < accounts.size(); i++)
@@ -608,8 +605,100 @@ public class Main
 		
 		System.out.println("\n\033[36mNumber of Accounts: \033[37m" + accounts.size());
 		
-		System.out.println("\nPress Enter to Continue:");
-		scanner.nextLine();
+		//Delete Account
+		System.out.print("\nPress Enter to Continue \n('d' to delete account): ");
+		if(scanner.nextLine().equals("d"))
+		{
+			System.out.print("\nAccount No. To Be Deleted \n(0 to cancel): ");
+			int account = scanner.nextInt();
+			
+			if(account == 0)
+			{
+				displayAccounts();
+			}
+			
+			scanner.nextLine();
+			
+			boolean checkAccount = false;
+			int accountID = 0;
+			
+			for(int i = 0; i < accounts.size(); i++)
+			{
+				//Check if accountID exists in arraylist
+				if(accounts.get(i).getAccountID() == account)
+				{
+					accountID = i;
+					checkAccount = true;
+					break;
+				}
+				else
+				{
+					continue;
+				}
+			}
+			
+			if(checkAccount)
+			{
+				System.out.print("\n\033[33mConfirm To Delete Account Y/N: \033[37m");
+				String confirmation = scanner.nextLine();
+				
+				switch(confirmation)
+				{
+				case "Y":
+				case "y":
+					accounts.remove(accountID);
+					awr.Write(accounts);
+					System.out.println("\033[31mAccount No. " + account + " deleted\033[37m");
+					
+					try 
+					{
+						Thread.sleep(2000);
+					} 
+					catch (InterruptedException e) 
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					displayAccounts();
+					break;
+				case "N":
+				case "n":
+					displayAccounts();
+					break;
+				default:
+					System.out.print("\033[31mInvalid Selection\033[37m");
+
+					try 
+					{
+						Thread.sleep(2000);
+					} 
+					catch (InterruptedException e) 
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					displayAccounts();
+				}	
+			}
+			else
+			{
+				System.out.println("\033[31mAccount No. " + account + " Doesn't Exist\033[37m");
+				
+				try 
+				{
+					Thread.sleep(2000);
+				} 
+				catch (InterruptedException e) 
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				displayAccounts();
+			}	
+		}
 		
 		openingScreen();
 	}
