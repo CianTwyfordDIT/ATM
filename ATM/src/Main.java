@@ -10,6 +10,7 @@ public class Main
 	static AccountWriterReader awr = new AccountWriterReader();
 	private static ArrayList<Account> accounts = new ArrayList<Account>();
 	static DecimalFormat formatter = new DecimalFormat("#,###.00");
+	private static int adminPassword = 4321;
 	
 	public static void main(String[] args) 
 	{	
@@ -370,8 +371,6 @@ public class Main
 					case "N":
 					case "n":
 						confirmation = false;
-						cls();
-						loading();
 						createAccount();
 	
 					case "0":
@@ -527,9 +526,56 @@ public class Main
 	public static void displayAccounts()
 	{
 		cls();
+		int checkPassword;
 		
 		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(System.in);
+		
+		try
+		{
+			System.out.print("Password: ");
+			checkPassword = scanner.nextInt();
+			scanner.nextLine();
+		
+			if(checkPassword == adminPassword)
+			{
+				cls();
+			}
+			else
+			{
+				System.out.println("\033[31mPassword Incorrect\033[37m");
+				
+				try 
+				{
+					Thread.sleep(2000);
+				} 
+				catch (InterruptedException e) 
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				openingScreen();
+			}
+		}
+		catch(InputMismatchException e)
+		{
+			System.out.println("\033[31mInvalid Input\033[37m");
+			
+			try 
+			{
+				Thread.sleep(2000);
+			} 
+			catch (InterruptedException ee) 
+			{
+				// TODO Auto-generated catch block
+				ee.printStackTrace();
+			}
+			
+			displayAccounts();
+		}
+		
+		
 		accounts = awr.Read();
 		
 		for(int i = 0; i < accounts.size(); i++)
