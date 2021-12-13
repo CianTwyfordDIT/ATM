@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Account implements Serializable
 {
-	static DecimalFormat formatter = new DecimalFormat("#,###.00");
+	static DecimalFormat formatter = new DecimalFormat("#,##0.00");
 	private static final long serialVersionUID = 1L;
 	private int accountID;
 	private String custName;
@@ -12,11 +12,11 @@ public class Account implements Serializable
 	private double balance = 0;
 	private ArrayList<String> history = new ArrayList<String>();
 	
-	Account(String custName, int PIN, double balance, int accountID)
+	Account(String custName, int PIN, int accountID)
 	{
 		this.custName = custName;
 		this.PIN = PIN;
-		this.balance = balance;
+		this.balance = 0.00;
 		this.accountID = accountID;
 		this.setHistory(history);
 	}

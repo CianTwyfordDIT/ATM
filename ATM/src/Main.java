@@ -9,7 +9,7 @@ public class Main
 {
 	static AccountWriterReader awr = new AccountWriterReader();
 	private static ArrayList<Account> accounts = new ArrayList<Account>();
-	static DecimalFormat formatter = new DecimalFormat("#,###.00");
+	static DecimalFormat formatter = new DecimalFormat("#,##0.00");
 	private static int adminPassword = 4321;
 	
 	public static void main(String[] args) 
@@ -266,7 +266,6 @@ public class Main
 		boolean confirmation = false;
 		String custName;
 		int PIN;
-		double balance;
 		int accountID;
 		String response;
 			
@@ -292,9 +291,6 @@ public class Main
 					
 					System.out.print("Create PIN: ");	
 					PIN = scanner.nextInt();
-	
-					System.out.print("Enter $ Balance: ");	
-					balance = scanner.nextDouble();
 					scanner.nextLine();
 					
 					if((int)(Math.log10(PIN) + 1) != 4)
@@ -328,7 +324,6 @@ public class Main
 					System.out.print("\033[37m");
 					System.out.println("\nCustomer Name: " + custName);
 					System.out.println("PIN: " + PIN);
-					System.out.println("Balance: $" + formatter.format(balance));
 					System.out.print("\033[33m");
 					System.out.print("Y/N (Enter 0 to return to main menu): ");
 					System.out.print("\033[37m");
@@ -352,7 +347,7 @@ public class Main
 							accountID = (accounts.get((accounts.size())-1).getAccountID()+1);
 						}
 						
-						accounts.add(new Account(custName, PIN, balance, accountID));
+						accounts.add(new Account(custName, PIN, accountID));
 						accounts = awr.Write(accounts);
 						
 						cls();
@@ -746,9 +741,8 @@ public class Main
 				}
 				else 
 				{
-					withdrawDeposit(balance, accountID, accountNum, -amount, 'W');
+					response = withdrawDeposit(balance, accountID, accountNum, -amount, 'W');
 				}
-				mainOptions(accountNum);
 				break;
 				
 			case "H":
@@ -905,9 +899,8 @@ public class Main
 				}
 				else 
 				{
-					withdrawDeposit(balance, accountID, accountNum, amount, 'D');
+					response = withdrawDeposit(balance, accountID, accountNum, amount, 'D');
 				}
-				mainOptions(accountNum);
 				break;
 				
 			case "H":
