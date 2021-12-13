@@ -266,6 +266,7 @@ public class Main
 		boolean confirmation = false;
 		String custName;
 		int PIN;
+		int confirmPIN;
 		int accountID;
 		String response;
 			
@@ -291,7 +292,27 @@ public class Main
 					
 					System.out.print("Create PIN: ");	
 					PIN = scanner.nextInt();
+					
+					System.out.print("Re-Enter PIN: ");	
+					confirmPIN = scanner.nextInt();
 					scanner.nextLine();
+					
+					if(PIN != confirmPIN)
+					{
+						System.out.print("\033[31m");
+						System.out.println("PIN Does Not Match");
+						System.out.print("\033[37m");
+	
+						try 
+						{
+							Thread.sleep(2000);
+						} 
+						catch (InterruptedException e) 
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}	
 					
 					if((int)(Math.log10(PIN) + 1) != 4)
 					{
@@ -310,7 +331,7 @@ public class Main
 						}
 					}
 				}
-				while((int)(Math.log10(PIN) + 1) != 4);
+				while((int)(Math.log10(PIN) + 1) != 4 || PIN != confirmPIN);
 					
 				cls();
 				loading();
@@ -459,18 +480,19 @@ public class Main
 				break;
 				
 			case 2:
-				withdrawCash(accountNum);
+				withdrawCash(accountNum, accountID);
 				break;
 				
 			case 3:
-				depositCash(accountNum);
+				depositCash(accountNum, accountID);
 				break;
 			
 			case 4:
+				changePIN(accountNum, accountID);
 				break;
 				
 			case 5:
-				deleteAccount(accountNum);
+				deleteAccount(accountNum, accountID);
 				break;
 				
 			case 6:
@@ -638,27 +660,12 @@ public class Main
 		mainOptions(accountNum);
 	}
 	
-	public static void withdrawCash(int accountNum)
+	public static void withdrawCash(int accountNum, int accountID)
 	{
-		int accountID = 0;
 		int amount;
 		String option;
 		String response = "";
 		Scanner scanner = new Scanner(System.in);
-		
-		for(int i = 0; i < accounts.size(); i++)
-		{
-			//Check if accountID exists in arraylist
-			if(accounts.get(i).getAccountID() == accountNum)
-			{
-				accountID = i;
-				break;
-			}
-			else
-			{
-				continue;
-			}
-		}
 		
 		double balance = accounts.get(accountID).getBalance();
 		
@@ -737,7 +744,7 @@ public class Main
 						ee.printStackTrace();
 					}
 					
-					withdrawCash(accountNum);
+					withdrawCash(accountNum, accountID);
 				}
 				else 
 				{
@@ -761,7 +768,7 @@ public class Main
 					ee.printStackTrace();
 				}
 				
-				withdrawCash(accountNum);
+				withdrawCash(accountNum, accountID);
 			}
 			
 			System.out.println(response);
@@ -792,31 +799,16 @@ public class Main
 				ee.printStackTrace();
 			}
 			
-			withdrawCash(accountNum);
+			withdrawCash(accountNum, accountID);
 		}
 	}
 	
-	public static void depositCash(int accountNum)
+	public static void depositCash(int accountNum, int accountID)
 	{
-		int accountID = 0;
 		int amount;
 		String option;
 		String response = "";
 		Scanner scanner = new Scanner(System.in);
-		
-		for(int i = 0; i < accounts.size(); i++)
-		{
-			//Check if accountID exists in arraylist
-			if(accounts.get(i).getAccountID() == accountNum)
-			{
-				accountID = i;
-				break;
-			}
-			else
-			{
-				continue;
-			}
-		}
 		
 		double balance = accounts.get(accountID).getBalance();
 		
@@ -895,7 +887,7 @@ public class Main
 						ee.printStackTrace();
 					}
 					
-					depositCash(accountNum);
+					depositCash(accountNum, accountID);
 				}
 				else 
 				{
@@ -919,7 +911,7 @@ public class Main
 					ee.printStackTrace();
 				}
 				
-				depositCash(accountNum);
+				depositCash(accountNum, accountID);
 			}
 			
 			System.out.println(response);
@@ -950,7 +942,7 @@ public class Main
 				ee.printStackTrace();
 			}
 			
-			depositCash(accountNum);
+			depositCash(accountNum, accountID);
 		}
 	}
 	
@@ -993,29 +985,117 @@ public class Main
 		return response;
 	}
 	
+	public static void changePIN(int accountNum, int accountID)
+	{
+		Scanner scanner = new Scanner(System.in);
+		int PIN;
+		int confirmPIN;
+				
+		try
+		{	
+			do
+			{
+				cls();
+				
+				System.out.print("  *******************\n");
+				System.out.print("\033[34m");
+				System.out.print("    Bank Of Ireland\n");
+				System.out.print("\033[37m");
+				System.out.print("  *******************\n\n");
+				System.out.println("Change PIN");
+				
+				System.out.print("\nNew PIN (0 to Exit to Main Menu): ");	
+				PIN = scanner.nextInt();
+				
+				if(PIN == 0)
+				{
+					mainOptions(accountNum);
+				}
+				
+				System.out.print("Re-Enter PIN: ");	
+				confirmPIN = scanner.nextInt();
+				scanner.nextLine();
+				
+				if(PIN != confirmPIN)
+				{
+					System.out.print("\033[31m");
+					System.out.println("PIN Does Not Match");
+					System.out.print("\033[37m");
+
+					try 
+					{
+						Thread.sleep(2000);
+					} 
+					catch (InterruptedException e) 
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}	
+				
+				if((int)(Math.log10(PIN) + 1) != 4)
+				{
+					System.out.print("\033[31m");
+					System.out.println("Invalid PIN - Must be 4 digits");
+					System.out.print("\033[37m");
+
+					try 
+					{
+						Thread.sleep(2000);
+					} 
+					catch (InterruptedException e) 
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+			while((int)(Math.log10(PIN) + 1) != 4 || PIN != confirmPIN);
+			
+			accounts.get(accountID).setPIN(PIN);
+			awr.Write(accounts);
+			
+			System.out.println("\033[32mPIN Change Confirmed\033[37m");
+			
+			try 
+			{
+				Thread.sleep(2000);
+			} 
+			catch (InterruptedException ee) 
+			{
+				// TODO Auto-generated catch block
+				ee.printStackTrace();
+			}
+			
+			mainOptions(accountNum);
+			
+		}
+		catch(InputMismatchException e)
+		{
+			System.out.println("\033[31mInvalid Input\033[37m");
+			
+			try 
+			{
+				Thread.sleep(2000);
+			} 
+			catch (InterruptedException ee) 
+			{
+				// TODO Auto-generated catch block
+				ee.printStackTrace();
+			}
+			
+			changePIN(accountNum, accountID);
+		}
+	}
+	
 	//Delete account from arraylist
-	public static void deleteAccount(int accountNum)
+	public static void deleteAccount(int accountNum, int accountID)
 	{
 		Scanner scanner = new Scanner(System.in);
 		String response = "";
 		boolean PINconfirm = false;
 		int PIN = 0;
 		int checkPIN = 0;
-		int accountID = 0;
-		
-		for(int i = 0; i < accounts.size(); i++)
-		{
-			//Check if accountID exists in arraylist
-			if(accounts.get(i).getAccountID() == accountNum)
-			{
-				accountID = i;
-				break;
-			}
-			else
-			{
-				continue;
-			}
-		}
 		
 		//Show while user has entered wrong input
 		do
@@ -1102,7 +1182,7 @@ public class Main
 				}
 				
 				cls();
-				deleteAccount(accountNum);
+				deleteAccount(accountNum, accountID);
 			}
 		} 
 		while(!response.equals("Y") && !response.equals("y") && !response.equals("N") && !response.equals("n") || PINconfirm == false);
